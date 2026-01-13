@@ -1,0 +1,19 @@
+# Plugin Superpilot
+
+This cartridge integrates Superpilot Pages with Salesforce B2C Commerce.
+
+## Installation
+
+1. Upload the cartridge to the active code version of your Salesforce B2C Commerce instance.
+2. In Business Manager, goto Admin > Operations > Services and create a service named `Superpilot` with the type `GENERIC`.
+3. Create a new credential associated with the service with the URL `https://$ENV-$ORG.pages.superpilot.ai`.
+4. Optionally, create a Custom Site Preference named `superpilotPathPrefix` a path prefix for the Superpilot Pages. The default prefix is `/landing`.
+5. Add `plugin_superpilot` to your site's cartridge path.
+
+You should now able to access Superpilot Pages at the the URL `https://$INSTANCE/landing/$PATH` and the sitemap at `https://$INSTANCE/sitemap-pages.xml`.
+
+For help and support please contact us at support@superpilot.ai.
+
+The latest version of this cartridge is available on GitHub:
+
+* https://github.com/superpilotlabs/plugin_superpilot
