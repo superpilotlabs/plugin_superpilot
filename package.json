@@ -1,6 +1,6 @@
 {
     "name": "plugin_superpilot",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Salesforce B2C Commerce cartridge for Superpilot",
     "author": "Superpilot"
 }
