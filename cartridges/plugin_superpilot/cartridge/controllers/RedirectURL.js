@@ -1,16 +1,10 @@
 "use strict";
 
 const server = require("server");
-const {
-  fetch,
-  handle404,
-  PATH_PREFIX,
-} = require("*/cartridge/scripts/superpilot/proxy");
+const { fetch, PATH_PREFIX } = require("*/cartridge/scripts/superpilot/proxy");
 const URLRedirectMgr = require("dw/web/URLRedirectMgr");
 
-server.extend(module.superModule);
-
-server.prepend("Start", function Start(_req, res, next) {
+function SuperpilotPage(_req, _res, next) {
   const path = URLRedirectMgr.getRedirectOrigin();
   if (!path.startsWith(PATH_PREFIX)) {
     return next();
@@ -25,6 +19,8 @@ server.prepend("Start", function Start(_req, res, next) {
   } catch (error) {}
 
   return next();
-});
+}
 
+server.extend(module.superModule);
+server.prepend("Start", SuperpilotPage);
 module.exports = server.exports();

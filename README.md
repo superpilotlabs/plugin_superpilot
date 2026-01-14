@@ -10,10 +10,14 @@ This cartridge integrates Superpilot Pages with Salesforce B2C Commerce.
 4. Optionally, create a Custom Site Preference named `superpilotPathPrefix` a path prefix for the Superpilot Pages. The default prefix is `/landing`.
 5. Add `plugin_superpilot` to your site's cartridge path.
 
-You should now able to access Superpilot Pages at the the URL `https://$INSTANCE/landing/$PATH` and the sitemap at `https://$INSTANCE/sitemap-pages.xml`.
+You should now able to access Superpilot pages at the the URL `https://$INSTANCE/landing/$PATH` and the Superpilot sitemap at `https://$INSTANCE/sitemap-pages.xml`.
 
 For help and support please contact us at support@superpilot.ai.
 
 The latest version of this cartridge is available on GitHub:
 
-* https://github.com/superpilotlabs/plugin_superpilot
+- https://github.com/superpilotlabs/plugin_superpilot
+
+## Troubleshooting
+
+This cartridge alters the middleware chains of the controllers `RedirectURL-Start` and `SiteMap-Google` using `server.prepend`. If you are unable to load Superpilot pages or the sitemap, reivew how you are using these contorllers in your cartridges.
