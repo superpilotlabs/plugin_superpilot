@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Formatting
+        run: pnpm run format:check
+      - name: Linting
+        run: pnpm run lint
+      - name: Tests
+        run: pnpm test
+        env:
+          B2C_HOSTNAME: ${{ vars.B2C_HOSTNAME }}
+          B2C_SITE_ID: ${{ vars.B2C_SITE_ID }}
+          TEST_LANDING_SLUG: ${{ vars.TEST_LANDING_SLUG }}

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const server = require("server");
-const { fetch, PATH_PREFIX } = require("*/cartridge/scripts/superpilot/proxy");
-const URLRedirectMgr = require("dw/web/URLRedirectMgr");
+const server = require('server');
+const { fetch, PATH_PREFIX } = require('*/cartridge/scripts/superpilot/proxy');
+const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 
 function SuperpilotPage(_req, _res, next) {
   const path = URLRedirectMgr.getRedirectOrigin();
@@ -16,11 +16,11 @@ function SuperpilotPage(_req, _res, next) {
       response.getWriter().print(fetchResponse.body);
       return;
     }
-  } catch (error) {}
+  } catch (_error) {}
 
   return next();
 }
 
 server.extend(module.superModule);
-server.prepend("Start", SuperpilotPage);
+server.prepend('Start', SuperpilotPage);
 module.exports = server.exports();
