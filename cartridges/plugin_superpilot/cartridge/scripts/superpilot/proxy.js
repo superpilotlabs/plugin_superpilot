@@ -35,7 +35,6 @@ function fetch(path) {
   return result.object;
 }
 
-
 module.exports = {
   fetch,
   PATH_PREFIX,

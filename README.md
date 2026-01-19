@@ -20,5 +20,5 @@ The latest version of this cartridge is available on GitHub:
 
 ## Troubleshooting
 
-* This cartridge alters the middleware chains of the controllers `RedirectURL-Start` and `SiteMap-Google` using `server.prepend`. If you are unable to load Superpilot pages or the sitemap, review how you are using these controllers in your cartridges.
-* Check the URL associated with your Superpilot credential in Business Manager. It should be `https://$ORG-$ENV.pages.superpilot.ai`.
+- This cartridge alters the middleware chains of the controllers `RedirectURL-Start` and `SiteMap-Google` using `server.prepend`. If you are unable to load Superpilot pages or the sitemap, review how you are using these controllers in your cartridges.
+- Check the URL associated with your Superpilot credential in Business Manager. It should be `https://$ORG-$ENV.pages.superpilot.ai`.
