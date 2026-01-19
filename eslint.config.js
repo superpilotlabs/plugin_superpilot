@@ -20,8 +20,10 @@ module.exports = [
       },
     },
     rules: {
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-      'object-shorthand': 'error',
+      'no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ],
       'no-unneeded-ternary': 'error',
       'prefer-template': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }],

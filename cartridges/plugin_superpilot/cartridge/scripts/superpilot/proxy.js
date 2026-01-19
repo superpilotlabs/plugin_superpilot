@@ -2,7 +2,6 @@
 
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const HTTPClient = require('dw/net/HTTPClient');
-const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 
 const { PATH_PREFIX } = require('*/cartridge/scripts/superpilot/config');
 
@@ -30,7 +29,7 @@ function fetch(path) {
 
   const result = service.call();
   if (!result.ok) {
-    throw new Error('Service error: ' + result.errorMessage);
+    throw new Error(`Service error: ${result.errorMessage}`);
   }
 
   return result.object;

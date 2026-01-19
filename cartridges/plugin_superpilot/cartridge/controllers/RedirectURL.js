@@ -16,7 +16,7 @@ function SuperpilotPage(_req, _res, next) {
       response.getWriter().print(fetchResponse.body);
       return;
     }
-  } catch (error) {}
+  } catch (_error) {}
 
   return next();
 }

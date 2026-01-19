@@ -17,7 +17,7 @@ function SuperpilotSiteMap(_req, res, next) {
       response.getWriter().print(fetchResponse.body);
       return;
     }
-  } catch (error) {}
+  } catch (_error) {}
 
   return next();
 }
