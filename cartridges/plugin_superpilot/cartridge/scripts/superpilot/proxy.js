@@ -35,14 +35,8 @@ function fetch(path) {
   return result.object;
 }
 
-function handle404(res, next) {
-  res.setStatusCode(404);
-  res.render('error/notFound');
-  next();
-}
 
 module.exports = {
   fetch,
   PATH_PREFIX,
-  handle404,
 };
