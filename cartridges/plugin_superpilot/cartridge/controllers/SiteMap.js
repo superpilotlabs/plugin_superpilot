@@ -22,6 +22,10 @@ function SuperpilotSiteMap(_req, res, next) {
   return next();
 }
 
-server.extend(module.superModule);
-server.prepend('Google', SuperpilotSiteMap);
+if (module.superModule) {
+  server.extend(module.superModule);
+  server.prepend('Google', SuperpilotSiteMap);
+} else {
+  server.get('Google', SuperpilotSiteMap);
+}
 module.exports = server.exports();
