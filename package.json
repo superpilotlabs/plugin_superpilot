@@ -17,6 +17,7 @@
     "useTabs": false
   },
   "scripts": {
+    "check": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",

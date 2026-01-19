@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 
-const LocalServiceRegistry = require("dw/svc/LocalServiceRegistry");
-const HTTPClient = require("dw/net/HTTPClient");
-const URLRedirectMgr = require("dw/web/URLRedirectMgr");
+const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
+const HTTPClient = require('dw/net/HTTPClient');
+const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 
-const { PATH_PREFIX } = require("*/cartridge/scripts/superpilot/config");
+const { PATH_PREFIX } = require('*/cartridge/scripts/superpilot/config');
 
 function fetch(path) {
-  const service = LocalServiceRegistry.createService("Superpilot", {
+  const service = LocalServiceRegistry.createService('Superpilot', {
     execute: function (svc) {
       const client = new HTTPClient();
-      client.open("GET", svc.getURL());
+      client.open('GET', svc.getURL());
       client.send();
       return client;
     },
@@ -30,7 +30,7 @@ function fetch(path) {
 
   const result = service.call();
   if (!result.ok) {
-    throw new Error("Service error: " + result.errorMessage);
+    throw new Error('Service error: ' + result.errorMessage);
   }
 
   return result.object;
@@ -38,7 +38,7 @@ function fetch(path) {
 
 function handle404(res, next) {
   res.setStatusCode(404);
-  res.render("error/notFound");
+  res.render('error/notFound');
   next();
 }
 
