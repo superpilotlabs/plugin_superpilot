@@ -6,16 +6,16 @@ describe('Superpilot Landing Pages', () => {
     const url = buildUrl(`/landing/${config.testLandingSlug}`);
     const response = await fetch(url);
 
-    expect(response.status).toBe(200);
+    expect(response.status, `GET ${url}`).toBe(200);
     const body = await response.text();
-    expect(body).toContain('<');
+    expect(body, `GET ${url}`).toContain('<');
   });
 
   it('should return 404 for a non-existent landing page', async () => {
     const url = buildUrl('/landing/nonexistent-page-404');
     const response = await fetch(url);
 
-    expect(response.status).toBe(404);
+    expect(response.status, `GET ${url}`).toBe(404);
   });
 });
 
@@ -24,7 +24,7 @@ describe('Superpilot Sitemap', () => {
     const url = buildUrl('/sitemap-pages.xml');
     const response = await fetch(url);
 
-    expect(response.status).toBe(200);
+    expect(response.status, `GET ${url}`).toBe(200);
   });
 
   it('should return application/xml content-type', async () => {
@@ -32,7 +32,7 @@ describe('Superpilot Sitemap', () => {
     const response = await fetch(url);
 
     const contentType = response.headers.get('content-type');
-    expect(contentType).toContain('application/xml');
+    expect(contentType, `GET ${url}`).toContain('application/xml');
   });
 
   it('should contain valid sitemap structure', async () => {
@@ -42,6 +42,6 @@ describe('Superpilot Sitemap', () => {
 
     const hasUrlset = body.includes('<urlset');
     const hasSitemapIndex = body.includes('<sitemapindex');
-    expect(hasUrlset || hasSitemapIndex).toBe(true);
+    expect(hasUrlset || hasSitemapIndex, `GET ${url}`).toBe(true);
   });
 });
