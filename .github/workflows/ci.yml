@@ -19,13 +19,13 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - name: Check formatting
+      - name: Formatting
         run: pnpm run format:check
-      - name: Lint
+      - name: Linting
         run: pnpm run lint
-      - name: Run E2E tests
+      - name: Tests
         run: pnpm test
         env:
-          SFCC_HOSTNAME: ${{ secrets.SFCC_HOSTNAME }}
-          SFCC_SITE_ID: ${{ secrets.SFCC_SITE_ID }}
-          TEST_LANDING_SLUG: ${{ secrets.TEST_LANDING_SLUG }}
+          B2C_HOSTNAME: ${{ vars.B2C_HOSTNAME }}
+          B2C_SITE_ID: ${{ vars.B2C_SITE_ID }}
+          TEST_LANDING_SLUG: ${{ vars.TEST_LANDING_SLUG }}
