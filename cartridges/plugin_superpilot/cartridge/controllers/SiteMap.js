@@ -6,7 +6,7 @@ const server = require('server');
 
 function SuperpilotSiteMap(_req, res, next) {
   const path = URLRedirectMgr.getRedirectOrigin();
-  if (!path.startsWith('/sitemap-pages.xml')) {
+  if (path.indexOf('/sitemap-pages.xml') !== 0) {
     return next();
   }
 
