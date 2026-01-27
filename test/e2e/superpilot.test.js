@@ -20,28 +20,23 @@ describe('Superpilot Landing Pages', () => {
 });
 
 describe('Superpilot Sitemap', () => {
-  it('should return 200 for sitemap', async () => {
+  it('should return 200 for Superpilot sitemap', async () => {
     const url = buildUrl('/sitemap-pages.xml');
     const response = await fetch(url);
 
     expect(response.status, `GET ${url}`).toBe(200);
-  });
-
-  it('should return application/xml content-type', async () => {
-    const url = buildUrl('/sitemap-pages.xml');
-    const response = await fetch(url);
-
     const contentType = response.headers.get('content-type');
-    expect(contentType, `GET ${url}`).toContain('application/xml');
+    expect(contentType).toContain('application/xml');
+    const body = await response.text();
+    expect(body).toContain('<urlset');
   });
 
-  it('should contain valid sitemap structure', async () => {
-    const url = buildUrl('/sitemap-pages.xml');
+  it('should return 200 for sitemap index', async () => {
+    const url = buildUrl('/sitemap_index.xml');
     const response = await fetch(url);
-    const body = await response.text();
 
-    const hasUrlset = body.includes('<urlset');
-    const hasSitemapIndex = body.includes('<sitemapindex');
-    expect(hasUrlset || hasSitemapIndex, `GET ${url}`).toBe(true);
+    expect(response.status, `GET ${url}`).toBe(200);
+    const body = await response.text();
+    expect(body).toContain('<sitemapindex');
   });
 });
