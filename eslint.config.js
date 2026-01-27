@@ -32,15 +32,18 @@ module.exports = [
         'error',
         {
           selector: 'TemplateLiteral',
-          message: 'Template literals are not supported by Rhino. Use string concatenation instead.',
+          message:
+            'Template literals are not supported by Rhino. Use string concatenation instead.',
         },
         {
           selector: "CallExpression[callee.property.name='startsWith']",
-          message: "String.prototype.startsWith is not supported by Rhino. Use indexOf() === 0 instead.",
+          message:
+            'String.prototype.startsWith is not supported by Rhino. Use indexOf() === 0 instead.',
         },
         {
           selector: "CallExpression[callee.property.name='endsWith']",
-          message: "String.prototype.endsWith is not supported by Rhino. Use slice() or indexOf() instead.",
+          message:
+            'String.prototype.endsWith is not supported by Rhino. Use slice() or indexOf() instead.',
         },
       ],
     },
