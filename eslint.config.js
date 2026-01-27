@@ -25,8 +25,24 @@ module.exports = [
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
       'no-unneeded-ternary': 'error',
-      'prefer-template': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }],
+      // Rhino engine compatibility - disallow ES6+ features
+      'object-shorthand': ['error', 'never'],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'TemplateLiteral',
+          message: 'Template literals are not supported by Rhino. Use string concatenation instead.',
+        },
+        {
+          selector: "CallExpression[callee.property.name='startsWith']",
+          message: "String.prototype.startsWith is not supported by Rhino. Use indexOf() === 0 instead.",
+        },
+        {
+          selector: "CallExpression[callee.property.name='endsWith']",
+          message: "String.prototype.endsWith is not supported by Rhino. Use slice() or indexOf() instead.",
+        },
+      ],
     },
   },
   eslintConfigPrettier,
