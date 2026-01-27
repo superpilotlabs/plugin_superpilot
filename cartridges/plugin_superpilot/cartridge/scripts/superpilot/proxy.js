@@ -29,13 +29,13 @@ function fetch(path) {
 
   const result = service.call();
   if (!result.ok) {
-    throw new Error(`Service error: ${result.errorMessage}`);
+    throw new Error('Service error: ' + result.errorMessage);
   }
 
   return result.object;
 }
 
 module.exports = {
-  fetch,
-  PATH_PREFIX,
+  fetch: fetch,
+  PATH_PREFIX: PATH_PREFIX,
 };

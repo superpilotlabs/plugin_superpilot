@@ -6,7 +6,7 @@ const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 
 function SuperpilotPage(_req, _res, next) {
   const path = URLRedirectMgr.getRedirectOrigin();
-  if (!path.startsWith(PATH_PREFIX)) {
+  if (path.indexOf(PATH_PREFIX) !== 0) {
     return next();
   }
 
