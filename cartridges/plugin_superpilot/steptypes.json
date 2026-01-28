@@ -1,0 +1,69 @@
+{
+  "step-types": {
+    "script-module-step": [
+      {
+        "@type-id": "custom.Superpilot.ImportSitemap",
+        "@supports-site-context": true,
+        "@supports-organization-context": false,
+        "@supports-parallel-execution": false,
+        "description": "Fetches the Superpilot sitemap and registers it as a custom sitemap in SFCC.",
+        "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSuperpilotSitemap.js",
+        "function": "execute",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "SitemapPath",
+              "@type": "string",
+              "@required": false,
+              "@trim": true,
+              "description": "Remote path to fetch from Superpilot service (default: /sitemap.xml)",
+              "default-value": "/sitemap.xml"
+            },
+            {
+              "@name": "TargetFilename",
+              "@type": "string",
+              "@required": false,
+              "@trim": true,
+              "description": "Local filename for the sitemap (default: sitemap-superpilot.xml)",
+              "default-value": "superpilot-sitemap.xml"
+            },
+            {
+              "@name": "Hostname",
+              "@type": "string",
+              "@required": false,
+              "@trim": true,
+              "description": "Override hostname for sitemap registration. If empty, uses site's HTTPS hostname."
+            },
+            {
+              "@name": "DeleteExisting",
+              "@type": "boolean",
+              "@required": false,
+              "description": "Remove existing Superpilot sitemaps before adding new one (default: false)",
+              "default-value": false
+            }
+          ]
+        },
+        "status-codes": {
+          "status": [
+            {
+              "@code": "SUCCESS",
+              "description": "Sitemap imported and registered successfully."
+            },
+            {
+              "@code": "FETCH_FAILED",
+              "description": "Failed to fetch sitemap from Superpilot service."
+            },
+            {
+              "@code": "WRITE_FAILED",
+              "description": "Failed to write sitemap to temporary file."
+            },
+            {
+              "@code": "EXCEPTION",
+              "description": "An unexpected error occurred during execution."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
