@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="superpilotEnabled">
+                <display-name xml:lang="x-default">Enabled</display-name>
+                <description xml:lang="x-default">Enable Superpilot. Set to false to disable Superpilot functionality.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <default-value>true</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="superpilotPathPrefix">
+                <display-name xml:lang="x-default">Path Prefix</display-name>
+                <description xml:lang="x-default">URL path prefix for Superpilot pages. Use a string (e.g., /landing) or regex with "regex:" prefix (e.g., regex:^\/(landing|promo)\/)</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <default-value>/landing</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="superpilotSitemapSuffix">
+                <display-name xml:lang="x-default">Sitemap Suffix</display-name>
+                <description xml:lang="x-default">Suffix for the sitemap URL. Results in /sitemap-{suffix}.xml (e.g., "pages" -> /sitemap-pages.xml)</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <default-value>pages</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="superpilotEnableSystemInfo">
+                <display-name xml:lang="x-default">Enable Superpilot-Info Endpoint</display-name>
+                <description xml:lang="x-default">Enable the Superpilot-Show endpoint for diagnostics. Returns instance compatibility mode, hostname, and other system information.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="superpilotCacheTime">
+                <display-name xml:lang="x-default">Cache Time (seconds)</display-name>
+                <description xml:lang="x-default">Cache duration in seconds for Superpilot pages and sitemap. Leave empty to disable caching.</description>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Superpilot">
+                <display-name xml:lang="x-default">Superpilot Settings</display-name>
+                <attribute attribute-id="superpilotEnabled"/>
+                <attribute attribute-id="superpilotPathPrefix"/>
+                <attribute attribute-id="superpilotSitemapSuffix"/>
+                <attribute attribute-id="superpilotEnableSystemInfo"/>
+                <attribute attribute-id="superpilotCacheTime"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+</metadata>
