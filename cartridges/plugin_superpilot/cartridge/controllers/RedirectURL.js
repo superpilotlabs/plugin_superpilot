@@ -18,15 +18,12 @@ function SuperpilotPage(_req, _res, next) {
     return next();
   }
 
-  const queryString = request.httpQueryString;
-  const fullPath = queryString ? path + '?' + queryString : path;
-
   if (logger.isDebugEnabled()) {
-    logger.debug('Page: {0}', fullPath);
+    logger.debug('Page: {0}', path);
   }
 
   try {
-    const fetchResponse = fetch(fullPath);
+    const fetchResponse = fetch(path);
     if (fetchResponse.ok) {
       if (CACHE_TIME) {
         response.setExpires(new Date(Date.now() + CACHE_TIME * 1000));

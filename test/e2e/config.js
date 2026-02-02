@@ -1,7 +1,7 @@
 export const config = {
   hostname: process.env.B2C_HOSTNAME || 'blwf-001.dx.commercecloud.salesforce.com',
   siteId: process.env.B2C_SITE_ID || 'RefArch',
-  pagePath: process.env.TEST_PAGE_PATH || '/landing/statement-mini-dresses-for-parties-a56e63f6',
+  pagePath: process.env.TEST_PAGE_PATH || '/landing/hello-superpilot',
 };
 
 export function buildUrl(path) {
