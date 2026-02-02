@@ -21,10 +21,21 @@ function createHeaderGetter(map) {
   };
 }
 
+var DEFAULT_TIMEOUT = 5000;
+
 function fetch(path) {
   const service = LocalServiceRegistry.createService('Superpilot', {
     execute: function (svc) {
       const client = new HTTPClient();
+
+      // Don't follow redirects
+      client.setAllowRedirect(false);
+
+      // Respect service timeout from profile, fallback to default
+      const profile = svc.getConfiguration().getProfile();
+      const timeout = (profile && profile.getTimeoutMillis()) || DEFAULT_TIMEOUT;
+      client.setTimeout(timeout);
+
       client.open('GET', svc.getURL());
       client.send();
       return client;
