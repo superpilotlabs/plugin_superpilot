@@ -13,12 +13,15 @@ function SuperpilotPage(_req, _res, next) {
     return next();
   }
 
+  const queryString = request.httpQueryString;
+  const fullPath = queryString ? path + '?' + queryString : path;
+
   if (logger.isDebugEnabled()) {
-    logger.debug('Page: {0}', path);
+    logger.debug('Page: {0}', fullPath);
   }
 
   try {
-    const fetchResponse = fetch(path);
+    const fetchResponse = fetch(fullPath);
     if (fetchResponse.ok) {
       response.getWriter().print(fetchResponse.body);
       return;
