@@ -5,7 +5,7 @@ const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 const server = require('server');
 const { fetch, PATH_PREFIX } = require('*/cartridge/scripts/superpilot/proxy');
 
-const logger = Logger.getLogger('superpilot', 'controllers.RedirectURL');
+const logger = Logger.getLogger('superpilot', 'superpilot.controllers.RedirectURL');
 
 function SuperpilotPage(_req, _res, next) {
   const path = URLRedirectMgr.getRedirectOrigin();
