@@ -4,7 +4,7 @@ const Logger = require('dw/system/Logger');
 const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 const server = require('server');
 const { fetch } = require('*/cartridge/scripts/superpilot/proxy');
-const { ENABLED, CACHE_TIME } = require('*/cartridge/scripts/superpilot/config');
+const { ENABLED, SITEMAP_SUFFIX, CACHE_TIME } = require('*/cartridge/scripts/superpilot/config');
 
 const logger = Logger.getLogger('superpilot', 'superpilot.controllers.SiteMap');
 
@@ -14,7 +14,8 @@ function SuperpilotSiteMap(_req, res, next) {
   }
 
   const path = URLRedirectMgr.getRedirectOrigin();
-  if (path.indexOf('/sitemap-pages.xml') !== 0) {
+  const sitemapPath = '/sitemap-' + SITEMAP_SUFFIX + '.xml';
+  if (path.indexOf(sitemapPath) !== 0) {
     return next();
   }
 
