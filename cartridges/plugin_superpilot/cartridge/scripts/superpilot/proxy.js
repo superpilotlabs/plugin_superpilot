@@ -3,8 +3,7 @@
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const HTTPClient = require('dw/net/HTTPClient');
 const HashMap = require('dw/util/HashMap');
-
-const { PATH_PREFIX } = require('*/cartridge/scripts/superpilot/config');
+const System = require('dw/system/System');
 
 /**
  * Returns a case-insensitive getter for a headers map.
@@ -37,6 +36,7 @@ function fetch(path) {
       client.setTimeout(timeout);
 
       client.open('GET', svc.getURL());
+      client.setRequestHeader('X-B2C-Instance', System.getInstanceHostname());
       client.send();
       return client;
     },
@@ -67,5 +67,4 @@ function fetch(path) {
 
 module.exports = {
   fetch: fetch,
-  PATH_PREFIX: PATH_PREFIX,
 };
