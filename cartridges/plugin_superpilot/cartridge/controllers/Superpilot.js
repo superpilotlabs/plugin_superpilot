@@ -52,16 +52,7 @@ server.get('Show', function (req, res, next) {
   }
 
   const compatMode = System.getCompatibilityMode();
-  const compatModeFormatted =
-    Math.floor(compatMode / 100) + '.' + (compatMode % 100);
-
-  // OCAPI version is only available for OCAPI requests
-  var ocapiVersion = null;
-  try {
-    ocapiVersion = request.ocapiVersion;
-  } catch (e) {
-    // Not an OCAPI request
-  }
+  const compatModeFormatted = Math.floor(compatMode / 100) + '.' + (compatMode % 100);
 
   res.json({
     superpilot: {
@@ -71,36 +62,13 @@ server.get('Show', function (req, res, next) {
       cacheTime: config.CACHE_TIME,
       serviceURL: getServiceURL(),
     },
-    compatibilityMode: {
-      raw: compatMode,
-      formatted: compatModeFormatted,
-    },
     instance: {
       hostname: System.getInstanceHostname(),
-      type: getInstanceTypeName(System.getInstanceType()),
-      timeZone: System.getInstanceTimeZone(),
+      compatibilityMode: compatModeFormatted,
     },
-    site: {
-      id: Site.getCurrent().getID(),
-      name: Site.getCurrent().getName(),
-    },
-    ocapiVersion: ocapiVersion,
   });
 
   return next();
 });
-
-function getInstanceTypeName(type) {
-  switch (type) {
-    case System.DEVELOPMENT_SYSTEM:
-      return 'development';
-    case System.STAGING_SYSTEM:
-      return 'staging';
-    case System.PRODUCTION_SYSTEM:
-      return 'production';
-    default:
-      return 'unknown';
-  }
-}
 
 module.exports = server.exports();
