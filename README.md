@@ -42,25 +42,31 @@ regex:^\/(landing|promo)\/
 
 ## Importing Metadata
 
-The cartridge includes metadata definitions for site preferences in `cartridges/plugin_superpilot/cartridge/meta/`.
+The cartridge includes metadata definitions in `cartridges/plugin_superpilot/cartridge/meta/`:
+
+- `system-objecttype-extensions.xml` - Site preference definitions
+- `services.xml` - Superpilot service, profile, and credential
 
 ### Using the B2C CLI
 
 ```sh
-# Import metadata to your instance
-b2c job run --job-id sfcc-site-archive-import --file-name cartridges/plugin_superpilot/cartridge/meta
+# Upload and import in one step (default merge mode won't overwrite existing values)
+b2c job import cartridges/plugin_superpilot/cartridge/meta
 ```
 
-Or upload via WebDAV and import through Business Manager:
+### Using Business Manager
 
-```sh
-# Upload to IMPEX
-b2c webdav upload cartridges/plugin_superpilot/cartridge/meta /impex/src/instance/meta
+1. Upload the `meta` folder to `/impex/src/instance/` via WebDAV
+2. Go to **Administration > Site Development > Site Import & Export**
+3. Select the uploaded folder and click **Import**
 
-# Then in Business Manager:
-# Administration > Site Development > Site Import & Export
-# Import from "meta" folder
-```
+### Post-Import Configuration
+
+After importing, update the service credential URL in Business Manager:
+
+1. Go to **Administration > Operations > Services**
+2. Click on **Credentials** tab, then **Superpilot**
+3. Update the URL to your Superpilot origin (e.g., `https://$ORG-$ENV.pages.superpilot.ai`)
 
 ## Running Tests
 
