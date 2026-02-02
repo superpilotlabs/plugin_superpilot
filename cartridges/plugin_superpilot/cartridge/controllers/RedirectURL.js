@@ -23,9 +23,14 @@ function SuperpilotPage(_req, _res, next) {
       response.getWriter().print(fetchResponse.body);
       return;
     }
-    logger.error('Page non-OK status: {0}', fetchResponse.status);
+    logger.error(
+      'Page error: url={0}, status={1}, requestId={2}',
+      fetchResponse.url,
+      fetchResponse.status,
+      fetchResponse.requestId
+    );
   } catch (error) {
-    logger.error('Page error: {0}', error.message);
+    logger.error('Page error: path={0}, message={1}', path, error.message);
   }
 
   return next();

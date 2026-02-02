@@ -24,9 +24,15 @@ function SuperpilotSiteMap(_req, res, next) {
       response.getWriter().print(fetchResponse.body);
       return;
     }
-    logger.error('Sitemap non-OK status: {0}', fetchResponse.status);
+    logger.error(
+      'Sitemap error: url={0}, status={1}, requestId={2}',
+      fetchResponse.url,
+      fetchResponse.status,
+      fetchResponse.requestId
+    );
+
   } catch (error) {
-    logger.error('Sitemap error: {0}', error.message);
+    logger.error('Sitemap error: path={0}, message={1}', path, error.message);
   }
 
   return next();
