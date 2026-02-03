@@ -22,13 +22,13 @@ The latest version of this cartridge is available on GitHub:
 
 Configure Superpilot behavior in Business Manager under **Merchant Tools > Site Preferences > Custom Preferences > Superpilot**.
 
-| Preference | Type | Default | Description |
-|------------|------|---------|-------------|
-| `superpilotEnabled` | Boolean | `true` | Disable Superpilot |
-| `superpilotPathPrefix` | String | `/landing` | URL path prefix for Superpilot pages. Supports regex with `regex:` prefix |
-| `superpilotSitemapSuffix` | String | `pages` | Sitemap URL suffix (e.g., `pages` → `/sitemap-pages.xml`) |
-| `superpilotCacheTime` | Integer | (none) | Cache duration in seconds for successful responses |
-| `superpilotEnableSystemInfo` | Boolean | (see below) | Enable the `Superpilot-Show` diagnostic endpoint |
+| Preference                   | Type    | Default     | Description                                                               |
+| ---------------------------- | ------- | ----------- | ------------------------------------------------------------------------- |
+| `superpilotEnabled`          | Boolean | `true`      | Disable Superpilot                                                        |
+| `superpilotPathPrefix`       | String  | `/landing`  | URL path prefix for Superpilot pages. Supports regex with `regex:` prefix |
+| `superpilotSitemapSuffix`    | String  | `pages`     | Sitemap URL suffix (e.g., `pages` → `/sitemap-pages.xml`)                 |
+| `superpilotCacheTime`        | Integer | (none)      | Cache duration in seconds for successful responses                        |
+| `superpilotEnableSystemInfo` | Boolean | (see below) | Enable the `Superpilot-Show` diagnostic endpoint                          |
 
 ### Path Prefix
 
@@ -139,9 +139,9 @@ b2c logs tail --filter custom-superpilot --last=0
 
 ### Common Errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| 404 on landing pages | Path doesn't match prefix | Check `superpilotPathPrefix` setting |
-| 403 on Superpilot-Show | Endpoint disabled | Set `superpilotEnableSystemInfo` to `true` |
-| Service error in logs | Superpilot service misconfigured | Verify service URL and credentials |
-| Regex warning in logs | Regex pattern missing prefix | Add `regex:` prefix to pattern |
+| Error                  | Cause                            | Solution                                   |
+| ---------------------- | -------------------------------- | ------------------------------------------ |
+| 404 on landing pages   | Path doesn't match prefix        | Check `superpilotPathPrefix` setting       |
+| 403 on Superpilot-Show | Endpoint disabled                | Set `superpilotEnableSystemInfo` to `true` |
+| Service error in logs  | Superpilot service misconfigured | Verify service URL and credentials         |
+| Regex warning in logs  | Regex pattern missing prefix     | Add `regex:` prefix to pattern             |

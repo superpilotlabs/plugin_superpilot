@@ -17,7 +17,10 @@ const pathPrefixPattern = isPathPrefixRegex ? pathPrefixValue.substring(6) : nul
 
 // Warn if value looks like a regex but missing prefix
 if (!isPathPrefixRegex && /[\^$*+?[\]{}|()]/.test(pathPrefixValue)) {
-  logger.warn('Path prefix "{0}" contains regex characters but missing "regex:" prefix', pathPrefixValue);
+  logger.warn(
+    'Path prefix "{0}" contains regex characters but missing "regex:" prefix',
+    pathPrefixValue
+  );
 }
 
 var pathPrefixRegex = null;

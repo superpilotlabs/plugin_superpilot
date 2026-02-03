@@ -37,26 +37,29 @@ describe('Superpilot Landing Pages', () => {
     expect(response.status, `GET ${url}`).toBe(200);
   });
 
-  it.runIf(hasTag('cache'))('[cache] should return cached response on subsequent requests', async () => {
-    const url = buildUrl(config.pagePath);
+  it.runIf(hasTag('cache'))(
+    '[cache] should return cached response on subsequent requests',
+    async () => {
+      const url = buildUrl(config.pagePath);
 
-    const response1 = await fetch(url);
-    expect(response1.status, `GET ${url}`).toBe(200);
-    const requestId1 = response1.headers.get('X-SF-CC-Superpilot-Request-Id');
+      const response1 = await fetch(url);
+      expect(response1.status, `GET ${url}`).toBe(200);
+      const requestId1 = response1.headers.get('X-SF-CC-Superpilot-Request-Id');
 
-    // Small delay then second request
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Small delay then second request
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const response2 = await fetch(url);
-    expect(response2.status, `GET ${url}`).toBe(200);
-    const requestId2 = response2.headers.get('X-SF-CC-Superpilot-Request-Id');
+      const response2 = await fetch(url);
+      expect(response2.status, `GET ${url}`).toBe(200);
+      const requestId2 = response2.headers.get('X-SF-CC-Superpilot-Request-Id');
 
-    // If caching is enabled, both requests should have the same request ID
-    // (the cached response contains the original request ID)
-    expect(requestId1, 'Expected request ID on first request').toBeTruthy();
-    expect(requestId2, 'Expected request ID on second request').toBeTruthy();
-    expect(requestId2, 'Expected cached response with same request ID').toBe(requestId1);
-  });
+      // If caching is enabled, both requests should have the same request ID
+      // (the cached response contains the original request ID)
+      expect(requestId1, 'Expected request ID on first request').toBeTruthy();
+      expect(requestId2, 'Expected request ID on second request').toBeTruthy();
+      expect(requestId2, 'Expected cached response with same request ID').toBe(requestId1);
+    }
+  );
 });
 
 describe('Superpilot Sitemap', () => {

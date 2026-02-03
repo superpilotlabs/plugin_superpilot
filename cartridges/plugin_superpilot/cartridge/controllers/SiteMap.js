@@ -42,7 +42,6 @@ function SuperpilotSiteMap(_req, res, next) {
       fetchResponse.status,
       fetchResponse.requestId
     );
-
   } catch (error) {
     logger.error('Sitemap error: path={0}, message={1}', path, error.message);
   }

@@ -23,10 +23,17 @@ const log = Logger.getLogger('superpilot', 'superpilot.jobs.importSitemap');
 function execute(params, _stepExecution) {
   if (!config.ENABLED) {
     log.info('Disabled - skipping sitemap import');
-    return new Status(Status.OK, 'SKIPPED', 'Superpilot is disabled');
+    return new Status(Status.OK, 'SKIP', 'Superpilot is disabled');
   }
 
-  const hostname = params.Hostname || Site.getCurrent().getHttpsHostName();
+  let hostname;
+  try {
+    hostname = params.Hostname || Site.getCurrent().getHttpsHostName();
+  } catch (error) {
+    log.error('Error getting hostname: message={0}', error.message);
+    return new Status(Status.ERROR, 'ERROR', error.message);
+  }
+
   const targetFilename = config.SITEMAP_SUFFIX + '.xml';
 
   log.info(
@@ -44,24 +51,25 @@ function execute(params, _stepExecution) {
       fetchResponse = proxy.fetch('/sitemap.xml');
     } catch (fetchError) {
       log.error('Fetch error: message={0}', fetchError.message);
-      return new Status(Status.ERROR, 'FETCH_FAILED', fetchError.message);
+      return new Status(Status.ERROR, 'ERROR', fetchError.message);
     }
 
     if (!fetchResponse.ok) {
-      logger.error(
+      log.error(
         'Fetch error: url={0}, status={1}, requestId={2}',
         fetchResponse.url,
         fetchResponse.status,
         fetchResponse.requestId
       );
-      return new Status(Status.ERROR, 'FETCH_FAILED', 'HTTP status: ' + fetchResponse.status);
+      return new Status(Status.ERROR, 'ERROR', 'HTTP status: ' + fetchResponse.status);
     }
 
     const sitemapContent = fetchResponse.body;
     log.info('Sitemap: {0} bytes, requestId={1}', sitemapContent.length, fetchResponse.requestId);
 
-    // 2. Write to temp file
-    let tempDir = new File(File.TEMP + '/superpilot/sitemap');
+    // 2. Write to temp file (include site ID to avoid conflicts in multi-site jobs)
+    const siteId = Site.getCurrent().getID();
+    const tempDir = new File(File.TEMP + '/superpilot/sitemap/' + siteId);
     if (!tempDir.exists()) {
       tempDir.mkdirs();
     }
@@ -73,8 +81,8 @@ function execute(params, _stepExecution) {
       writer.write(sitemapContent);
       writer.flush();
     } catch (writeError) {
-      logger.error('Write error: message={0}', writeError.message);
-      return new Status(Status.ERROR, 'WRITE_FAILED', writeError.message);
+      log.error('Write error: message={0}', writeError.message);
+      return new Status(Status.ERROR, 'ERROR', writeError.message);
     } finally {
       if (writer) {
         writer.close();
@@ -94,7 +102,7 @@ function execute(params, _stepExecution) {
     }
 
     log.info('Import completed successfully');
-    return new Status(Status.OK, 'SUCCESS');
+    return new Status(Status.OK, 'OK');
   } catch (e) {
     log.error('Error: message={0} stack={1}', e.message, e.stack);
 
@@ -107,7 +115,7 @@ function execute(params, _stepExecution) {
       }
     }
 
-    return new Status(Status.ERROR, 'EXCEPTION', e.message);
+    return new Status(Status.ERROR, 'ERROR', e.message);
   }
 }
 
