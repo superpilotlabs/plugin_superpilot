@@ -23,9 +23,13 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy": "b2c code deploy ./cartridges",
+    "deploy:ci": "b2c code deploy ./cartridges --delete --json",
+    "deploy:meta": "b2c job import cartridges/plugin_superpilot/cartridge/meta"
   },
   "devDependencies": {
+    "@salesforce/b2c-cli": "^0.3.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "prettier": "^3.4.2",
