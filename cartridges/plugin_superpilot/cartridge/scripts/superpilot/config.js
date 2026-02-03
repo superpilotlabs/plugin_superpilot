@@ -6,11 +6,12 @@ const Logger = require('dw/system/Logger');
 var logger = Logger.getLogger('superpilot', 'superpilot.config');
 
 // For boolean with default true, check explicitly for false
-const enabledPref = Site.getCurrent().getCustomPreferenceValue('superpilotEnabled');
+const site = Site.getCurrent();
+const enabledPref = site.getCustomPreferenceValue('superpilotEnabled');
 const isEnabled = enabledPref !== false;
 
 // Path prefix - can be a string or regex (prefixed with "regex:")
-const pathPrefixRaw = Site.getCurrent().getCustomPreferenceValue('superpilotPathPrefix');
+const pathPrefixRaw = site.getCustomPreferenceValue('superpilotPathPrefix');
 const pathPrefixValue = pathPrefixRaw || '/landing';
 const isPathPrefixRegex = pathPrefixValue.indexOf('regex:') === 0;
 const pathPrefixPattern = isPathPrefixRegex ? pathPrefixValue.substring(6) : null;
@@ -47,14 +48,14 @@ function matchesPathPrefix(path) {
 }
 
 module.exports = {
-  // Kill switch - set to false to disable all Superpilot functionality
+  // Disable cartridge.
   ENABLED: isEnabled,
-  // Path prefix value (for logging/debugging)
+  // Path prefix rawvalue.
   PATH_PREFIX: pathPrefixValue,
   // Function to check if a path matches the prefix
   matchesPathPrefix: matchesPathPrefix,
   // Sitemap suffix - results in /sitemap-{suffix}.xml (default: pages -> /sitemap-pages.xml)
-  SITEMAP_SUFFIX: Site.getCurrent().getCustomPreferenceValue('superpilotSitemapSuffix') || 'pages',
+  SITEMAP_SUFFIX: site.getCustomPreferenceValue('superpilotSitemapSuffix') || 'pages',
   // Cache time in seconds for successful responses. Set to null to disable caching.
-  CACHE_TIME: Site.getCurrent().getCustomPreferenceValue('superpilotCacheTime') || null,
+  CACHE_TIME: site.getCustomPreferenceValue('superpilotCacheTime') || null,
 };

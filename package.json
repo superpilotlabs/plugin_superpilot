@@ -18,15 +18,15 @@
   },
   "scripts": {
     "check": "prettier --check . && eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "deploy": "b2c code deploy ./cartridges",
     "deploy:ci": "b2c code deploy ./cartridges --delete --json",
-    "deploy:meta": "b2c job import cartridges/plugin_superpilot/cartridge/meta"
+    "deploy:meta": "b2c job import ./data"
   },
   "devDependencies": {
     "@salesforce/b2c-cli": "^0.3.0",

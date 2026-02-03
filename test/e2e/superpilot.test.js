@@ -98,7 +98,7 @@ describe('Superpilot-Show Endpoint', () => {
     const url = buildUrl('/Superpilot-Show');
     const response = await fetch(url);
 
-    expect([200, 403]).toContain(response.status);
+    expect(response.status).toBe(200);
     const data = await response.json();
     expect(data).toBeTypeOf('object');
   });

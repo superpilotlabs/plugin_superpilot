@@ -12,7 +12,7 @@ const System = require('dw/system/System');
  */
 function createHeaderGetter(map) {
   const normalized = new HashMap();
-  for (var key in map) {
+  for (let key in map) {
     normalized.put(key.toLowerCase(), map[key]);
   }
   return function (name) {

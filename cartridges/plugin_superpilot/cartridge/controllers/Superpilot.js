@@ -9,18 +9,15 @@
 const server = require('server');
 const Site = require('dw/system/Site');
 const System = require('dw/system/System');
-const Logger = require('dw/system/Logger');
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const config = require('*/cartridge/scripts/superpilot/config');
-
-const logger = Logger.getLogger('superpilot', 'superpilot.controllers.Superpilot');
 
 /**
  * Check if management endpoints are enabled.
  * @returns {boolean} True if enabled.
  */
 function isEndpointEnabled() {
-  var enabledPref = Site.getCurrent().getCustomPreferenceValue('superpilotEnableSystemInfo');
+  var enabledPref = Site.getCurrent().getCustomPreferenceValue('superpilotDebug');
   var isDevelopment = System.getInstanceType() === System.DEVELOPMENT_SYSTEM;
   return enabledPref !== null ? enabledPref : isDevelopment;
 }
@@ -39,25 +36,15 @@ function getServiceURL() {
   }
 }
 
-server.get('Show', function (req, res, next) {
+function getCompatibilityModeFormatted() {
+  const compatMode = System.getCompatibilityMode();
+  return Math.floor(compatMode / 100) + '.' + (compatMode % 100);
+}
+
+server.get('Start', function (req, res, next) {
   if (!isEndpointEnabled()) {
-    if (logger.isDebugEnabled()) {
-      logger.debug('Show request denied - endpoint disabled');
-    }
-    res.setStatusCode(403);
-    res.json({
-      error: 'Endpoint disabled',
-      message: 'Set site preference superpilotEnableSystemInfo to true',
-    });
     return next();
   }
-
-  if (logger.isDebugEnabled()) {
-    logger.debug('Handling Show request');
-  }
-
-  const compatMode = System.getCompatibilityMode();
-  const compatModeFormatted = Math.floor(compatMode / 100) + '.' + (compatMode % 100);
 
   res.json({
     superpilot: {
@@ -69,7 +56,7 @@ server.get('Show', function (req, res, next) {
     },
     instance: {
       hostname: System.getInstanceHostname(),
-      compatibilityMode: compatModeFormatted,
+      compatibilityMode: getCompatibilityModeFormatted(),
     },
   });
 

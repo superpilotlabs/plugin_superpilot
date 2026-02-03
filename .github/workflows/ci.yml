@@ -1,4 +1,8 @@
-name: CI
+name: ci
+
+# Only one instance of this workflow may run at a time.
+concurrency:
+  group: ${{ github.workflow }}
 
 on:
   push:
@@ -17,7 +21,7 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run format:check
+      - run: pnpm run format
       - run: pnpm run lint
       - run: pnpm run deploy:ci
         env:

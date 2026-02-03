@@ -2,12 +2,12 @@
   "step-types": {
     "script-module-step": [
       {
-        "@type-id": "custom.Superpilot.ImportSitemap",
+        "@type-id": "custom.Superpilot.ImportSiteMap",
         "@supports-site-context": true,
         "@supports-organization-context": false,
         "@supports-parallel-execution": false,
         "description": "Requests the most recent Superpilot sitemap and registers it as a custom sitemap.",
-        "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSitemap.js",
+        "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSiteMap.js",
         "function": "execute",
         "parameters": {
           "parameter": [
