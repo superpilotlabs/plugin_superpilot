@@ -3,3 +3,4 @@ dw.json
 .DS_Store
 *.log
 types/
+dw*.json

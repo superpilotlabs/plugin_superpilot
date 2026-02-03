@@ -1,0 +1,40 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      instance:
+        description: 'Instance'
+        required: true
+        default: 'sbx'
+        type: choice
+        options:
+          - sbx
+          - stg
+
+concurrency:
+  group: ${{ github.event.inputs.instance || 'sbx' }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Load Certificate
+        if: inputs.instance == 'stg'
+        run: echo "${{ secrets.STG_SFCC_CERTIFICATE_B64 }}" | base64 -d > /tmp/cert.p12
+      - run: pnpm run deploy:ci
+        env:
+          SFCC_SERVER: ${{ inputs.instance == 'stg' && vars.STG_B2C_HOSTNAME || vars.B2C_HOSTNAME }}
+          SFCC_CLIENT_ID: ${{ secrets.SFCC_CLIENT_ID }}
+          SFCC_CLIENT_SECRET: ${{ secrets.SFCC_CLIENT_SECRET }}
+          SFCC_CODE_VERSION: ${{ vars.SFCC_CODE_VERSION || 'v1' }}
+          SFCC_CERTIFICATE: ${{ inputs.instance == 'stg' && '/tmp/cert.p12' || '' }}
+          SFCC_CERTIFICATE_PASSPHRASE: ${{ inputs.instance == 'stg' && secrets.STG_SFCC_CERTIFICATE_PASSPHRASE || '' }}
+          SFCC_WEBDAV_SERVER: ${{ inputs.instance == 'stg' && vars.STG_SFCC_WEBDAV_SERVER || '' }}
