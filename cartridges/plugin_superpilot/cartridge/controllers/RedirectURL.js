@@ -1,22 +1,48 @@
 'use strict';
 
-const server = require('server');
-const { fetch, PATH_PREFIX } = require('*/cartridge/scripts/superpilot/proxy');
+const Logger = require('dw/system/Logger');
 const URLRedirectMgr = require('dw/web/URLRedirectMgr');
+const server = require('server');
+const { fetch } = require('*/cartridge/scripts/superpilot/proxy');
+const { ENABLED, CACHE_TIME, matchesPathPrefix } = require('*/cartridge/scripts/superpilot/config');
+
+const logger = Logger.getLogger('superpilot', 'superpilot.controllers.RedirectURL');
 
 function SuperpilotPage(_req, _res, next) {
-  const path = URLRedirectMgr.getRedirectOrigin();
-  if (path.indexOf(PATH_PREFIX) !== 0) {
+  if (!ENABLED) {
     return next();
+  }
+
+  const path = URLRedirectMgr.getRedirectOrigin();
+  if (!matchesPathPrefix(path)) {
+    return next();
+  }
+
+  if (logger.isDebugEnabled()) {
+    logger.debug('Page: {0}', path);
   }
 
   try {
     const fetchResponse = fetch(path);
     if (fetchResponse.ok) {
+      if (CACHE_TIME) {
+        response.setExpires(new Date(Date.now() + CACHE_TIME * 1000));
+      }
+      if (fetchResponse.requestId) {
+        response.setHttpHeader('X-SF-CC-Superpilot-Request-Id', fetchResponse.requestId);
+      }
       response.getWriter().print(fetchResponse.body);
       return;
     }
-  } catch (_error) {}
+    logger.error(
+      'Page error: url={0}, status={1}, requestId={2}',
+      fetchResponse.url,
+      fetchResponse.status,
+      fetchResponse.requestId
+    );
+  } catch (error) {
+    logger.error('Page error: path={0}, message={1}', path, error.message);
+  }
 
   return next();
 }

@@ -1,0 +1,42 @@
+{
+  "step-types": {
+    "script-module-step": [
+      {
+        "@type-id": "custom.Superpilot.ImportSiteMap",
+        "@supports-site-context": true,
+        "@supports-organization-context": false,
+        "@supports-parallel-execution": false,
+        "description": "Requests the most recent Superpilot sitemap and registers it as a custom sitemap.",
+        "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSiteMap.js",
+        "function": "execute",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "Hostname",
+              "@type": "string",
+              "@required": false,
+              "@trim": true,
+              "description": "Override hostname for sitemap registration. If empty, uses site's HTTPS hostname."
+            }
+          ]
+        },
+        "status-codes": {
+          "status": [
+            {
+              "@code": "OK",
+              "description": "Sitemap imported successfully."
+            },
+            {
+              "@code": "SKIP",
+              "description": "Step was skipped."
+            },
+            {
+              "@code": "ERROR",
+              "description": "An error occurred."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -18,14 +18,18 @@
   },
   "scripts": {
     "check": "prettier --check . && eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy": "b2c code deploy ./cartridges",
+    "deploy:ci": "b2c code deploy ./cartridges --delete --json",
+    "deploy:meta": "b2c job import ./data"
   },
   "devDependencies": {
+    "@salesforce/b2c-cli": "^0.3.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "prettier": "^3.4.2",

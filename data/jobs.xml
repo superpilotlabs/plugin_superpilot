@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jobs xmlns="http://www.demandware.com/xml/impex/jobs/2015-07-01">
+    <job job-id="SuperpilotImportSiteMap">
+        <description>Imports Superpilot sitemap as a custom sitemap </description>
+        <flow>
+            <step step-id="import" type="custom.Superpilot.ImportSiteMap"/>
+        </flow>
+        <triggers/>
+    </job>
+</jobs>

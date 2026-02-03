@@ -1,4 +1,8 @@
-name: CI
+name: ci
+
+# Only one instance of this workflow may run at a time.
+concurrency:
+  group: ${{ github.workflow }}
 
 on:
   push:
@@ -17,12 +21,15 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - name: Formatting
-        run: pnpm run format:check
-      - name: Linting
-        run: pnpm run lint
-      - name: Tests
-        run: pnpm test
+      - run: pnpm run format
+      - run: pnpm run lint
+      - run: pnpm run deploy:ci
+        env:
+          SFCC_SERVER: ${{ vars.B2C_HOSTNAME }}
+          SFCC_CLIENT_ID: ${{ secrets.SFCC_CLIENT_ID }}
+          SFCC_CLIENT_SECRET: ${{ secrets.SFCC_CLIENT_SECRET }}
+          SFCC_CODE_VERSION: ${{ vars.SFCC_CODE_VERSION || 'v1' }}
+      - run: pnpm test
         env:
           B2C_HOSTNAME: ${{ vars.B2C_HOSTNAME }}
           B2C_SITE_ID: ${{ vars.B2C_SITE_ID }}
