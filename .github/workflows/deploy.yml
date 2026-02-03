@@ -1,8 +1,6 @@
 name: deploy
 
 on:
-  push:
-    branches: [pig-deploy]  # TEMP: remove after testing
   workflow_dispatch:
     inputs:
       instance:
@@ -29,7 +27,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Load Certificate
-        if: inputs.instance == 'stg'  # skipped when instance is sbx or unset
+        if: inputs.instance == 'stg'
         run: echo "${{ secrets.STG_SFCC_CERTIFICATE_B64 }}" | base64 -d > /tmp/cert.p12
       - run: pnpm run deploy:ci
         env:

@@ -18,7 +18,7 @@ The latest version of this cartridge is available on GitHub:
 
 ## Importing Metadata
 
-The cartridge requires metadata definitions in `data`. 
+The cartridge requires metadata definitions in `data`.
 
 Import them to your instance with the [`b2c`](https://salesforcecommercecloud.github.io/b2c-developer-tooling/) CLI or Business Manager.
 
