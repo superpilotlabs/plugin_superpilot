@@ -26,14 +26,9 @@ function execute(params, _stepExecution) {
     return new Status(Status.OK, 'SKIP', 'Superpilot is disabled');
   }
 
-  let hostname;
-  try {
-    hostname = params.Hostname || Site.getCurrent().getHttpsHostName();
-  } catch (error) {
-    log.error('Error getting hostname: message={0}', error.message);
-    return new Status(Status.ERROR, 'ERROR', error.message);
-  }
-
+  const site = Site.getCurrent();
+  const siteId = site.getID();
+  const hostname = params.Hostname || site.getHttpsHostName();
   const targetFilename = config.SITEMAP_SUFFIX + '.xml';
 
   log.info(
@@ -68,7 +63,6 @@ function execute(params, _stepExecution) {
     log.info('Sitemap: {0} bytes, requestId={1}', sitemapContent.length, fetchResponse.requestId);
 
     // 2. Write to temp file (include site ID to avoid conflicts in multi-site jobs)
-    const siteId = Site.getCurrent().getID();
     const tempDir = new File(File.TEMP + '/superpilot/sitemap/' + siteId);
     if (!tempDir.exists()) {
       tempDir.mkdirs();
@@ -92,8 +86,13 @@ function execute(params, _stepExecution) {
     log.info('Wrote sitemap: filename={0}', tempFile.fullPath);
 
     // 3. Register sitemap with SitemapMgr (overwrites if exists)
-    SitemapMgr.addCustomSitemapFile(hostname, tempFile);
-    log.info('Registered sitemap: hostname={0}', hostname, tempFile.fullPath);
+    try {
+      SitemapMgr.addCustomSitemapFile(hostname, tempFile);
+      log.info('Registered sitemap: hostname={0}', hostname, tempFile.fullPath);
+    } catch (addError) {
+      log.error('Error registering sitemap: message={0}', addError.message);
+      return new Status(Status.ERROR, 'ERROR', addError.message);
+    }
 
     // 4. Cleanup temp file
     if (tempFile.exists()) {

@@ -34,7 +34,7 @@ function getServiceURL() {
     var service = LocalServiceRegistry.createService('Superpilot', {});
     var credential = service.getConfiguration().getCredential();
     return credential ? credential.getURL() : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
