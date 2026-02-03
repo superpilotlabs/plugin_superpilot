@@ -1,16 +1,16 @@
 # Plugin Superpilot
 
-This cartridge integrates Superpilot Pages (superpilot.com) with Salesforce B2C Commerce.
+This cartridge integrates Superpilot pages (superpilot.com) with Salesforce B2C Commerce.
 
 ## Installation
 
 1. Upload the cartridge to the active code version of your B2C instance.
-2. Import the metadata (see [Importing Metadata](#importing-metadata) below).
+2. [Import the Metadata](#importing-metadata).
 3. In Business Manage, add `plugin_superpilot` to your site's cartridge path.
 
-Verify ou can access Superpilot pages at `https://$INSTANCE/s/$SITE/landing/$PATH` and the Superpilot sitemap at `https://$INSTANCE/s/$SITE/sitemap-pages.xml`.
+Verify you can access Superpilot pages at `https://$INSTANCE/s/$SITE/landing/$PATH` and the Superpilot sitemap at `https://$INSTANCE/s/$SITE/sitemap-pages.xml`.
 
-For help and support please contact support@superpilot.com.
+For help, please contact support@superpilot.com.
 
 The latest version of this cartridge is available on GitHub:
 
@@ -18,33 +18,31 @@ The latest version of this cartridge is available on GitHub:
 
 ## Importing Metadata
 
-The cartridge requires metadata definitions in `cartridges/plugin_superpilot/cartridge/meta/`:
+The cartridge requires metadata definitions in `data`. 
 
-- `system-objecttype-extensions.xml` - Site preferences
-- `services.xml` - Service and credential
-- `jobs.xml` - Optional job
+Import them to your instance with the [`b2c`](https://salesforcecommercecloud.github.io/b2c-developer-tooling/) CLI or Business Manager.
 
 ### Using the B2C CLI
 
 Upload and import metadata:
 
 ```sh
-b2c job import cartridges/plugin_superpilot/cartridge/meta
+b2c job import data
 ```
 
 ### Using Business Manager
 
-1. Upload the `meta` folder to `/impex/src/instance/` via WebDAV
+1. Upload the `data` folder to `/impex/src/instance/` via WebDAV
 2. Go to **Administration > Site Development > Site Import & Export**
 3. Select the uploaded folder and click **Import**
 
-### Post-Import Configuration
+### Configuration
 
-After import, update the service credential URL in Business Manager:
+After import, update the `Superpilot` service credential URL in Business Manager:
 
 1. Go to **Administration > Operations > Services**
 2. Click on **Credentials** tab, then **Superpilot**
-3. Update the URL to your Superpilot origin (e.g., `https://$ORG-$ENV.pages.superpilot.ai`)
+3. Update the URL to your Superpilot environment origin (e.g., `https://$ORG-$ENV.pages.superpilot.ai`)
 
 ## Site Preferences
 

@@ -2,7 +2,7 @@ name: ci
 
 # Only one instance of this workflow may run at a time.
 concurrency:
-  group: ${{ github.workflow }}
+  group: 'sbx'
 
 on:
   push:
