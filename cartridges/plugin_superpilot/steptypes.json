@@ -1,0 +1,45 @@
+{
+    "step-types": {
+        "script-module-step": [{
+            "@type-id": "custom.Superpilot.ImportSitemap",
+            "@supports-site-context": true,
+            "@supports-organization-context": false,
+            "description": "Requests the most recent Superpilot sitemap and registers it as a custom sitemap.",
+            "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSitemap.js",
+            "function": "execute",
+            "parameters": {
+                "parameter": [{
+                    "@name": "Hostname",
+                    "@type": "string",
+                    "@required": false,
+                    "@trim": true,
+                    "description": "Override hostname for sitemap registration. If empty, uses site's HTTPS hostname."
+                }]
+            },
+            "status-codes": {
+                "status": [
+                    {
+                        "@code": "SUCCESS",
+                        "description": "Sitemap imported and registered successfully."
+                    },
+                    {
+                        "@code": "SKIPPED",
+                        "description": "Superpilot is disabled via site preference."
+                    },
+                    {
+                        "@code": "FETCH_FAILED",
+                        "description": "Failed to fetch sitemap from Superpilot."
+                    },
+                    {
+                        "@code": "WRITE_FAILED",
+                        "description": "Failed to write sitemap to temporary file."
+                    },
+                    {
+                        "@code": "EXCEPTION",
+                        "description": "An unexpected error occurred during execution."
+                    }
+                ]
+            }
+        }]
+    }
+}

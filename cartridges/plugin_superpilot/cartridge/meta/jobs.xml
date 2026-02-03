@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jobs xmlns="http://www.demandware.com/xml/impex/jobs/2015-07-01">
+    <job job-id="SuperpilotImportSitemap">
+        <description>Import Superpilot sitemap </description>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="import" type="custom.Superpilot.ImportSitemap"/>
+        </flow>
+        <triggers>
+            <run-once enabled="false">
+                <date>2025-01-01Z</date>
+                <time>00:00:00.000Z</time>
+            </run-once>
+        </triggers>
+    </job>
+</jobs>

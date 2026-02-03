@@ -13,6 +13,18 @@ const Logger = require('dw/system/Logger');
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const config = require('*/cartridge/scripts/superpilot/config');
 
+const logger = Logger.getLogger('superpilot', 'superpilot.controllers.Superpilot');
+
+/**
+ * Check if management endpoints are enabled.
+ * @returns {boolean} True if enabled.
+ */
+function isEndpointEnabled() {
+  var enabledPref = Site.getCurrent().getCustomPreferenceValue('superpilotEnableSystemInfo');
+  var isDevelopment = System.getInstanceType() === System.DEVELOPMENT_SYSTEM;
+  return enabledPref !== null ? enabledPref : isDevelopment;
+}
+
 /**
  * Get the Superpilot service endpoint URL from service configuration.
  * @returns {string|null} The service URL or null if not configured.
@@ -27,17 +39,10 @@ function getServiceURL() {
   }
 }
 
-const logger = Logger.getLogger('superpilot', 'superpilot.controllers.Superpilot');
-
 server.get('Show', function (req, res, next) {
-  var enabledPref = Site.getCurrent().getCustomPreferenceValue('superpilotEnableSystemInfo');
-  // Default to enabled on sandbox/development instances if not explicitly set
-  var isDevelopment = System.getInstanceType() === System.DEVELOPMENT_SYSTEM;
-  var isEnabled = enabledPref !== null ? enabledPref : isDevelopment;
-
-  if (!isEnabled) {
+  if (!isEndpointEnabled()) {
     if (logger.isDebugEnabled()) {
-      logger.debug('SystemInfo request denied - endpoint disabled');
+      logger.debug('Show request denied - endpoint disabled');
     }
     res.setStatusCode(403);
     res.json({
@@ -48,7 +53,7 @@ server.get('Show', function (req, res, next) {
   }
 
   if (logger.isDebugEnabled()) {
-    logger.debug('Handling SystemInfo request');
+    logger.debug('Handling Show request');
   }
 
   const compatMode = System.getCompatibilityMode();
