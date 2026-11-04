@@ -96,7 +96,9 @@ So a header Superpilot adds later, such as `X-Robots-Tag: noindex` on a page's M
 Successful responses include an `X-SF-CC-Superpilot-Request-Id` header containing the request ID.
 Use this when contacting support.
 
-To check your current configuration, access the `Superpilot-Show` controller (must be enabled on non-sandbox instances).
+To check your current configuration, open the `Superpilot-Show` controller at
+`https://$INSTANCE/on/demandware.store/Sites-$SITE-Site/default/Superpilot-Show`. It answers on
+sandboxes, and elsewhere only with `superpilotDebug` set.
 
 ### Logging
 
@@ -142,9 +144,9 @@ B2C_HOSTNAME=your-sandbox.my.commercecloud.salesforce.com npm test
 TEST_PAGE_PATH=/landing/your-page npm test
 ```
 
-On-demand sandboxes serve their storefront on `*.my.commercecloud.salesforce.com`; the
-`*.dx.commercecloud.salesforce.com` host is for deploying code and redirects storefront pages. CI
-deploys to `B2C_HOSTNAME` and tests against `B2C_STOREFRONT_HOSTNAME` when that repo variable is set.
+On-demand sandboxes now serve their storefront on `*.my.commercecloud.salesforce.com`, and the
+same host takes code deploys and WebDAV; the old `*.dx.commercecloud.salesforce.com` host redirects
+storefront pages. Point `B2C_HOSTNAME` (and `dw.json`) at the `my` host.
 
 The sitemap index case needs the instance's own sitemap generated. `test/data` defines a
 `CreateSitemap` job for `RefArch`; import it once, and run it again after the host or hostname

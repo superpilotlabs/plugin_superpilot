@@ -41,7 +41,7 @@ function getCompatibilityModeFormatted() {
   return Math.floor(compatMode / 100) + '.' + (compatMode % 100);
 }
 
-server.get('Start', function (req, res, next) {
+server.get('Show', function (req, res, next) {
   if (!isEndpointEnabled()) {
     return next();
   }

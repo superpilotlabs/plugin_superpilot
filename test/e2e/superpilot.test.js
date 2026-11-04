@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { config, buildUrl } from './config.js';
+import { config, buildUrl, buildControllerUrl } from './config.js';
 
 const testTags = (process.env.TEST_TAGS || '').split(',').filter(Boolean);
 const hasTag = (tag) => testTags.includes(tag);
@@ -104,11 +104,11 @@ describe('Superpilot Sitemap', () => {
 
 describe('Superpilot-Show Endpoint', () => {
   it.runIf(hasTag('info'))('[info] should return JSON response', async () => {
-    const url = buildUrl('/Superpilot-Show');
+    const url = buildControllerUrl('Superpilot-Show');
     const response = await fetch(url);
 
-    expect(response.status).toBe(200);
+    expect(response.status, `GET ${url}`).toBe(200);
     const data = await response.json();
-    expect(data).toBeTypeOf('object');
+    expect(data.superpilot).toMatchObject({ enabled: true, pathPrefix: expect.any(String) });
   });
 });
