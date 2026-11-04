@@ -25,6 +25,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run deploy:ci
         env:
+          SFCC_DISABLE_TELEMETRY: 'true'
           SFCC_SERVER: ${{ vars.B2C_HOSTNAME }}
           SFCC_CLIENT_ID: ${{ secrets.SFCC_CLIENT_ID }}
           SFCC_CLIENT_SECRET: ${{ secrets.SFCC_CLIENT_SECRET }}

@@ -31,6 +31,7 @@ jobs:
         run: echo "${{ secrets.STG_SFCC_CERTIFICATE_B64 }}" | base64 -d > /tmp/cert.p12
       - run: pnpm run deploy:ci
         env:
+          SFCC_DISABLE_TELEMETRY: 'true'
           SFCC_SERVER: ${{ inputs.instance == 'stg' && vars.STG_B2C_HOSTNAME || vars.B2C_HOSTNAME }}
           SFCC_CLIENT_ID: ${{ secrets.SFCC_CLIENT_ID }}
           SFCC_CLIENT_SECRET: ${{ secrets.SFCC_CLIENT_SECRET }}

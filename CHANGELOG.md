@@ -23,7 +23,7 @@
 ### Development
 
 - Node 26 and pnpm 10.32.1, as in the Superpilot repo.
-- `@salesforce/b2c-cli` 2.12, `actions/checkout` and `actions/setup-node` v7, `pnpm/action-setup` v6,
+- `@salesforce/b2c-cli` 0.3 → 2.12, two major versions; a global `b2c` older than 2.x takes different flags than the README and CI use. `actions/checkout` and `actions/setup-node` v7, `pnpm/action-setup` v6,
   prettier 3.9 and eslint 9.39. `pnpm-lock.yaml` is left to pnpm (`.prettierignore`).
 - `steptypes.json` names the sitemap import job's module with the file's own casing
   (`importSitemap.js`).
@@ -60,12 +60,12 @@
 
 ### Site Preferences
 
-| Preference                   | Type    | Default    | Description                                |
-| ---------------------------- | ------- | ---------- | ------------------------------------------ |
-| `superpilotEnabled`          | Boolean | `true`     | Kill switch to disable all functionality   |
-| `superpilotPathPrefix`       | String  | `/landing` | URL path prefix (supports `regex:` prefix) |
-| `superpilotSitemapSuffix`    | String  | `pages`    | Sitemap URL suffix                         |
-| `superpilotCacheTime`        | Integer | (none)     | Cache duration in seconds                  |
-| `superpilotEnableSystemInfo` | Boolean | `false`\*  | Enable Superpilot-Show endpoint            |
+| Preference                | Type    | Default    | Description                                |
+| ------------------------- | ------- | ---------- | ------------------------------------------ |
+| `superpilotEnabled`       | Boolean | `true`     | Kill switch to disable all functionality   |
+| `superpilotPathPrefix`    | String  | `/landing` | URL path prefix (supports `regex:` prefix) |
+| `superpilotSiteMapSuffix` | String  | `pages`    | Sitemap URL suffix                         |
+| `superpilotCacheTime`     | Integer | (none)     | Cache duration in seconds                  |
+| `superpilotDebug`         | Boolean | (none)\*   | Enable Superpilot-Show endpoint            |
 
-\* Defaults to `true` on sandbox/development instances
+\* Unset, the endpoint answers on sandbox/development instances only
