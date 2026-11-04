@@ -109,6 +109,10 @@ describe('Superpilot-Show Endpoint', () => {
 
     expect(response.status, `GET ${url}`).toBe(200);
     const data = await response.json();
-    expect(data.superpilot).toMatchObject({ enabled: true, pathPrefix: expect.any(String) });
+    expect(data.superpilot).toMatchObject({
+      version: expect.any(String),
+      enabled: true,
+      pathPrefix: expect.any(String),
+    });
   });
 });

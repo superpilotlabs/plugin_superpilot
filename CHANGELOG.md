@@ -13,13 +13,16 @@
 ### Fixes
 
 - **`Superpilot-Show`** answered 500: its route was registered as `Start`. It is `Show` again, at
-  `/on/demandware.store/Sites-<site>-Site/default/Superpilot-Show`.
-- **Sitemap content type** comes from Superpilot (`application/xml`) rather than being set by the
-  controller.
+  `/on/demandware.store/Sites-<site>-Site/default/Superpilot-Show`, and `Start` still answers. It
+  now reports the cartridge's `version`.
+- **Sitemap content type** is `application/xml` unless Superpilot sends another.
+- Custom `X-SF-CC-` headers from Superpilot are passed on; a text content type without a charset
+  gets `charset=utf-8`.
 - A header B2C refuses is skipped and logged as `Header refused by B2C`, never failing the page.
 
 ### Development
 
+- Node 26 and pnpm 10.32.1, as in the Superpilot repo.
 - e2e runs against the sandbox's `*.my.commercecloud.salesforce.com` host, and checks the Markdown
   copy's headers and the `Superpilot-Show` response.
 - `test/data/jobs.xml` defines a `CreateSitemap` job for generating a test sandbox's sitemap.

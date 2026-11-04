@@ -11,6 +11,7 @@ const Site = require('dw/system/Site');
 const System = require('dw/system/System');
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const config = require('*/cartridge/scripts/superpilot/config');
+const VERSION = require('*/cartridge/scripts/superpilot/version');
 
 /**
  * Check if management endpoints are enabled.
@@ -41,13 +42,14 @@ function getCompatibilityModeFormatted() {
   return Math.floor(compatMode / 100) + '.' + (compatMode % 100);
 }
 
-server.get('Show', function (req, res, next) {
+function show(req, res, next) {
   if (!isEndpointEnabled()) {
     return next();
   }
 
   res.json({
     superpilot: {
+      version: VERSION,
       enabled: config.ENABLED,
       pathPrefix: config.PATH_PREFIX,
       sitemapSuffix: config.SITEMAP_SUFFIX,
@@ -61,6 +63,10 @@ server.get('Show', function (req, res, next) {
   });
 
   return next();
-});
+}
+
+server.get('Show', show);
+// The route this endpoint answered on before 0.0.3, kept for anything that still probes it.
+server.get('Start', show);
 
 module.exports = server.exports();
