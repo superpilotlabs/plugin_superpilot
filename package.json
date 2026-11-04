@@ -29,10 +29,10 @@
     "deploy:meta": "b2c job import ./data"
   },
   "devDependencies": {
-    "@salesforce/b2c-cli": "^0.3.0",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "prettier": "^3.4.2",
-    "vitest": "^3.0.4"
+    "@salesforce/b2c-cli": "^2.12.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.10",
+    "vitest": "^3.2.7"
   }
 }
