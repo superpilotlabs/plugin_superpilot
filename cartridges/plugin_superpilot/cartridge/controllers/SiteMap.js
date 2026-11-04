@@ -26,6 +26,7 @@ function SuperpilotSiteMap(_req, res, next) {
   try {
     const fetchResponse = fetch('/sitemap.xml');
     if (fetchResponse.ok) {
+      response.setContentType('application/xml');
       applyHeaders(response, fetchResponse.headers);
       if (CACHE_TIME) {
         response.setExpires(new Date(Date.now() + CACHE_TIME * 1000));

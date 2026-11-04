@@ -2,27 +2,11 @@
 
 const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const HTTPClient = require('dw/net/HTTPClient');
-const HashMap = require('dw/util/HashMap');
 const System = require('dw/system/System');
 const Logger = require('dw/system/Logger');
 const Response = require('dw/system/Response');
 
 const logger = Logger.getLogger('superpilot', 'superpilot.proxy');
-
-/**
- * Returns a case-insensitive getter for a headers map.
- * @param {dw.util.Map} map - Response headers map.
- * @returns {Function} Getter function that accepts a header name.
- */
-function createHeaderGetter(map) {
-  const normalized = new HashMap();
-  for (let key in map) {
-    normalized.put(key.toLowerCase(), map[key]);
-  }
-  return function (name) {
-    return normalized.get(name.toLowerCase());
-  };
-}
 
 var DEFAULT_TIMEOUT = 5000;
 
@@ -71,6 +55,7 @@ const BLOCKED_RESPONSE_HEADERS = [
   'x-amz-cf-pop',
   'x-amzn-trace-id',
   'x-powered-by',
+  'content-location',
   'cache-control',
   'expires',
   'pragma',
@@ -138,9 +123,35 @@ function listHeaders(map) {
 }
 
 /**
+ * The name B2C accepts for a lower-cased header name, or undefined when B2C lets no script set it:
+ * a `Response` constant's spelling, or a custom `X-SF-CC-` name with that prefix upper-cased.
+ * @param {string} name - Lower-cased header name.
+ * @returns {string|undefined} The name to set.
+ */
+function settableName(name) {
+  if (/^x-sf-cc-[a-z0-9_-]+$/.test(name)) {
+    return 'X-SF-CC-' + name.slice('x-sf-cc-'.length);
+  }
+  return SETTABLE_HEADERS[name];
+}
+
+/**
+ * A text content type with no charset gets UTF-8, which is what the writer emits; without it a
+ * browser reads the bytes as windows-1252.
+ * @param {string} contentType - The content type Superpilot sent.
+ * @returns {string} The content type to set.
+ */
+function withCharset(contentType) {
+  return /^text\//i.test(contentType) && !/charset=/i.test(contentType)
+    ? contentType + ';charset=utf-8'
+    : contentType;
+}
+
+/**
  * Writes Superpilot's response headers onto the storefront response, except the blocked ones and
  * any B2C does not let a script set. A header's first value replaces B2C's own, later values are
- * added. A header B2C still refuses is skipped and logged, so it never costs the shopper the page.
+ * added. A header B2C still refuses, `Content-Type` included, is skipped and logged, so it never
+ * costs the shopper the page.
  * @param {dw.system.Response} res - The storefront response.
  * @param {Array<Array<string>>} headers - Header pairs from `fetch`.
  */
@@ -149,24 +160,25 @@ function applyHeaders(res, headers) {
   for (let i = 0; i < headers.length; i++) {
     let name = headers[i][0];
     let value = headers[i][1];
-    let settable = SETTABLE_HEADERS[name];
-    if (name === 'content-type') {
-      res.setContentType(value);
-    } else if (BLOCKED_RESPONSE_HEADERS.indexOf(name) !== -1) {
+    if (BLOCKED_RESPONSE_HEADERS.indexOf(name) !== -1) {
       continue;
-    } else if (!settable) {
+    }
+    let settable = settableName(name);
+    if (name !== 'content-type' && !settable) {
       logger.debug('Header B2C does not let a script set: {0}', name);
-    } else {
-      try {
-        if (written[name]) {
-          res.addHttpHeader(settable, value);
-        } else {
-          res.setHttpHeader(settable, value);
-          written[name] = true;
-        }
-      } catch (e) {
-        logger.warn('Header refused by B2C: {0} ({1})', settable, e.message);
+      continue;
+    }
+    try {
+      if (name === 'content-type') {
+        res.setContentType(withCharset(value));
+      } else if (written[name]) {
+        res.addHttpHeader(settable, value);
+      } else {
+        res.setHttpHeader(settable, value);
+        written[name] = true;
       }
+    } catch (e) {
+      logger.warn('Header refused by B2C: {0} ({1})', name, e.message);
     }
   }
 }
@@ -190,14 +202,16 @@ function fetch(path) {
       return client;
     },
     parseResponse: function (_svc, client) {
-      const allHeaders = client.getAllResponseHeaders();
-      const getHeader = createHeaderGetter(allHeaders);
+      const headers = listHeaders(client.getAllResponseHeaders());
+      const requestId = headers.filter(function (pair) {
+        return pair[0] === 'x-amz-cf-id';
+      })[0];
       return {
         status: client.statusCode,
         body: client.text,
         ok: client.statusCode >= 200 && client.statusCode < 300,
-        requestId: getHeader('x-amz-cf-id') || null,
-        headers: listHeaders(allHeaders),
+        requestId: requestId ? requestId[1] : null,
+        headers: headers,
       };
     },
   });
