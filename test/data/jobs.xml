@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jobs xmlns="http://www.demandware.com/xml/impex/jobs/2015-07-01">
+    <job job-id="SuperpilotTestCreateSitemap">
+        <description>Generates the RefArch sitemap on a test sandbox, so the e2e suite's sitemap_index.xml case has one to read</description>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="create-sitemap" type="CreateSitemap"/>
+        </flow>
+        <triggers/>
+    </job>
+</jobs>

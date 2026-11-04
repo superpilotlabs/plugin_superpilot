@@ -137,6 +137,11 @@ TEST_PAGE_PATH=/landing/your-page npm test
 Some tests require specific configuration and are skipped by default. Enable them with `TEST_TAGS`:
 
 ```sh
+# The sitemap_index.xml case needs the sandbox's own sitemap generated. test/data holds a
+# CreateSitemap job for RefArch; import it once, then run it after a host or alias change:
+#   npx b2c job import test/data
+#   npx b2c job run SuperpilotTestCreateSitemap -w
+
 # Run cache test (requires superpilotCacheTime to be configured)
 TEST_TAGS=cache npm test
 
