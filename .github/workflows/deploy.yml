@@ -19,9 +19,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: '26'
           cache: 'pnpm'
@@ -31,6 +31,7 @@ jobs:
         run: echo "${{ secrets.STG_SFCC_CERTIFICATE_B64 }}" | base64 -d > /tmp/cert.p12
       - run: pnpm run deploy:ci
         env:
+          SFCC_DISABLE_TELEMETRY: 'true'
           SFCC_SERVER: ${{ inputs.instance == 'stg' && vars.STG_B2C_HOSTNAME || vars.B2C_HOSTNAME }}
           SFCC_CLIENT_ID: ${{ secrets.SFCC_CLIENT_ID }}
           SFCC_CLIENT_SECRET: ${{ secrets.SFCC_CLIENT_SECRET }}

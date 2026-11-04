@@ -7,7 +7,7 @@
         "@supports-organization-context": false,
         "@supports-parallel-execution": false,
         "description": "Requests the most recent Superpilot sitemap and registers it as a custom sitemap.",
-        "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSiteMap.js",
+        "module": "plugin_superpilot/cartridge/scripts/superpilot/jobs/importSitemap.js",
         "function": "execute",
         "parameters": {
           "parameter": [

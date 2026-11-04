@@ -3,7 +3,7 @@
 /**
  * Diagnostic endpoint that returns Superpilot config and system information.
  * Enabled by default on sandbox/development instances.
- * On staging/production, enable via site preference `superpilotEnableSystemInfo`.
+ * On staging/production, enable via site preference `superpilotDebug`.
  */
 
 const server = require('server');
