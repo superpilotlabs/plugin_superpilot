@@ -1,5 +1,5 @@
 export const config = {
-  hostname: process.env.B2C_HOSTNAME || 'blwf-001.my.commercecloud.salesforce.com',
+  hostname: process.env.B2C_HOSTNAME || 'blwf-001.dx.commercecloud.salesforce.com',
   siteId: process.env.B2C_SITE_ID || 'RefArch',
   pagePath: process.env.TEST_PAGE_PATH || '/landing/hello-superpilot',
 };
