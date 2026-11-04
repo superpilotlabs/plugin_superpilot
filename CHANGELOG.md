@@ -2,15 +2,12 @@
 
 ## 0.0.4
 
-### Fixes
-
-- **Sitemap import job**: `SuperpilotImportSiteMap` was invalid on every instance, because
-  `steptypes.json` named its module `importSiteMap.js` and the file is `importSitemap.js`. Run it
-  after upgrading so B2C's `sitemap_index.xml` lists `/sitemap-pages.xml`.
-
 ### Development
 
-- `@salesforce/b2c-cli` 2.12, `actions/checkout` and `actions/setup-node` v7, `pnpm/action-setup` v6.
+- `@salesforce/b2c-cli` 2.12, `actions/checkout` and `actions/setup-node` v7, `pnpm/action-setup` v6,
+  prettier 3.9 and eslint 9.39.
+- `steptypes.json` names the sitemap import job's module with the file's own casing
+  (`importSitemap.js`).
 
 ## 0.0.3
 
