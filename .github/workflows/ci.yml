@@ -31,6 +31,6 @@ jobs:
           SFCC_CODE_VERSION: ${{ vars.SFCC_CODE_VERSION || 'v1' }}
       - run: pnpm test
         env:
-          B2C_HOSTNAME: ${{ vars.B2C_HOSTNAME }}
+          B2C_HOSTNAME: ${{ vars.B2C_STOREFRONT_HOSTNAME || vars.B2C_HOSTNAME }}
           B2C_SITE_ID: ${{ vars.B2C_SITE_ID }}
           TEST_LANDING_SLUG: ${{ vars.TEST_LANDING_SLUG }}

@@ -4,6 +4,10 @@ const LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 const HTTPClient = require('dw/net/HTTPClient');
 const HashMap = require('dw/util/HashMap');
 const System = require('dw/system/System');
+const Logger = require('dw/system/Logger');
+const Response = require('dw/system/Response');
+
+const logger = Logger.getLogger('superpilot', 'superpilot.proxy');
 
 /**
  * Returns a case-insensitive getter for a headers map.
@@ -74,15 +78,58 @@ const BLOCKED_RESPONSE_HEADERS = [
 ];
 
 /**
+ * The public headers B2C lets a script set, keyed by lower-cased name. `addHttpHeader` and
+ * `setHttpHeader` accept only these names, spelled exactly as B2C's `Response` constants spell
+ * them (`x-robots-tag` is refused, `X-Robots-Tag` is not), plus custom `X-SF-CC-` names.
+ */
+const SETTABLE_HEADERS = {};
+[
+  Response.ACCESS_CONTROL_ALLOW_CREDENTIALS,
+  Response.ACCESS_CONTROL_ALLOW_HEADERS,
+  Response.ACCESS_CONTROL_ALLOW_METHODS,
+  Response.ACCESS_CONTROL_ALLOW_ORIGIN,
+  Response.ACCESS_CONTROL_EXPOSE_HEADERS,
+  Response.ALLOW,
+  Response.CONTENT_DISPOSITION,
+  Response.CONTENT_LANGUAGE,
+  Response.CONTENT_LOCATION,
+  Response.CONTENT_MD5,
+  Response.CONTENT_SECURITY_POLICY,
+  Response.CONTENT_SECURITY_POLICY_REPORT_ONLY,
+  Response.CROSS_ORIGIN_EMBEDDER_POLICY,
+  Response.CROSS_ORIGIN_EMBEDDER_POLICY_REPORT_ONLY,
+  Response.CROSS_ORIGIN_OPENER_POLICY,
+  Response.CROSS_ORIGIN_OPENER_POLICY_REPORT_ONLY,
+  Response.CROSS_ORIGIN_RESOURCE_POLICY,
+  Response.LINK,
+  Response.LOCATION,
+  Response.PERMISSIONS_POLICY,
+  Response.PLATFORM_FOR_PRIVACY_PREFERENCES_PROJECT,
+  Response.REFERRER_POLICY,
+  Response.REFRESH,
+  Response.RETRY_AFTER,
+  Response.SERVICE_WORKER_ALLOWED,
+  Response.VARY,
+  Response.X_CONTENT_TYPE_OPTIONS,
+  Response.X_FRAME_OPTIONS,
+  Response.X_ROBOTS_TAG,
+  Response.X_XSS_PROTECTION,
+].forEach(function (name) {
+  SETTABLE_HEADERS[String(name).toLowerCase()] = String(name);
+});
+
+/**
  * Lists a headers map as `[name, value]` pairs, one per value, with lower-cased names.
  * @param {dw.util.Map} map - Response headers map; each value is a list of header values.
  * @returns {Array<Array<string>>} Header pairs.
  */
 function listHeaders(map) {
+  // B2C's Rhino binds a const declared in a loop body once, on the first pass, so loop-scoped
+  // bindings here are let.
   const pairs = [];
   for (let key in map) {
-    const values = map[key];
-    const list = values && values.toArray ? values.toArray() : [values];
+    let values = map[key];
+    let list = values && values.toArray ? values.toArray() : [values];
     for (let i = 0; i < list.length; i++) {
       pairs.push([key.toLowerCase(), String(list[i])]);
     }
@@ -91,18 +138,35 @@ function listHeaders(map) {
 }
 
 /**
- * Writes Superpilot's response headers onto the storefront response, except the blocked ones.
+ * Writes Superpilot's response headers onto the storefront response, except the blocked ones and
+ * any B2C does not let a script set. A header's first value replaces B2C's own, later values are
+ * added. A header B2C still refuses is skipped and logged, so it never costs the shopper the page.
  * @param {dw.system.Response} res - The storefront response.
  * @param {Array<Array<string>>} headers - Header pairs from `fetch`.
  */
 function applyHeaders(res, headers) {
+  const written = {};
   for (let i = 0; i < headers.length; i++) {
-    const name = headers[i][0];
-    const value = headers[i][1];
+    let name = headers[i][0];
+    let value = headers[i][1];
+    let settable = SETTABLE_HEADERS[name];
     if (name === 'content-type') {
       res.setContentType(value);
-    } else if (BLOCKED_RESPONSE_HEADERS.indexOf(name) === -1) {
-      res.addHttpHeader(name, value);
+    } else if (BLOCKED_RESPONSE_HEADERS.indexOf(name) !== -1) {
+      continue;
+    } else if (!settable) {
+      logger.debug('Header B2C does not let a script set: {0}', name);
+    } else {
+      try {
+        if (written[name]) {
+          res.addHttpHeader(settable, value);
+        } else {
+          res.setHttpHeader(settable, value);
+          written[name] = true;
+        }
+      } catch (e) {
+        logger.warn('Header refused by B2C: {0} ({1})', settable, e.message);
+      }
     }
   }
 }
