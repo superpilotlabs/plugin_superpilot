@@ -30,6 +30,15 @@ describe('Superpilot Landing Pages', () => {
     expect(requestId, 'Expected X-SF-CC-Superpilot-Request-Id header').toBeTruthy();
   });
 
+  it("should pass Superpilot's headers through, such as the Markdown copy's noindex", async () => {
+    const url = buildUrl(config.pagePath + '.md');
+    const response = await fetch(url);
+
+    expect(response.status, `GET ${url}`).toBe(200);
+    expect(response.headers.get('content-type'), `GET ${url}`).toMatch(/^text\/markdown/);
+    expect(response.headers.get('x-robots-tag'), `GET ${url}`).toBe('noindex');
+  });
+
   it('should forward query strings to proxied pages', async () => {
     const url = buildUrl(config.pagePath + '?utm_source=test&utm_campaign=e2e');
     const response = await fetch(url);

@@ -81,6 +81,11 @@ regex:^\/(landing|promo)\/
 
 Successful responses include an `X-SF-CC-Superpilot-Request-Id` header containing the request ID.
 
+Every response header Superpilot sends reaches the shopper except a short blocklist in
+`scripts/superpilot/proxy.js`: hop-by-hop headers, cookies, HSTS and caching headers (caching is
+`superpilotCacheTime`). A header Superpilot adds later, such as `X-Robots-Tag` on a page's Markdown
+copy, needs no cartridge change.
+
 Use this when contacting support.
 
 To check your current configuration, access the `Superpilot-Show` controller (must be enabled on non-sandbox instances).
