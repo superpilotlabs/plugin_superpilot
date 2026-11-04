@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { config, buildUrl } from './config.js';
+import { config, buildUrl, buildControllerUrl } from './config.js';
 
 const testTags = (process.env.TEST_TAGS || '').split(',').filter(Boolean);
 const hasTag = (tag) => testTags.includes(tag);
@@ -28,6 +28,15 @@ describe('Superpilot Landing Pages', () => {
     expect(response.status, `GET ${url}`).toBe(200);
     const requestId = response.headers.get('X-SF-CC-Superpilot-Request-Id');
     expect(requestId, 'Expected X-SF-CC-Superpilot-Request-Id header').toBeTruthy();
+  });
+
+  it("should pass Superpilot's headers through, such as the Markdown copy's noindex", async () => {
+    const url = buildUrl(config.pagePath + '.md');
+    const response = await fetch(url);
+
+    expect(response.status, `GET ${url}`).toBe(200);
+    expect(response.headers.get('content-type'), `GET ${url}`).toMatch(/^text\/markdown/);
+    expect(response.headers.get('x-robots-tag'), `GET ${url}`).toBe('noindex');
   });
 
   it('should forward query strings to proxied pages', async () => {
@@ -95,11 +104,15 @@ describe('Superpilot Sitemap', () => {
 
 describe('Superpilot-Show Endpoint', () => {
   it.runIf(hasTag('info'))('[info] should return JSON response', async () => {
-    const url = buildUrl('/Superpilot-Show');
+    const url = buildControllerUrl('Superpilot-Show');
     const response = await fetch(url);
 
-    expect(response.status).toBe(200);
+    expect(response.status, `GET ${url}`).toBe(200);
     const data = await response.json();
-    expect(data).toBeTypeOf('object');
+    expect(data.superpilot).toMatchObject({
+      version: expect.any(String),
+      enabled: true,
+      pathPrefix: expect.any(String),
+    });
   });
 });

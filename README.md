@@ -6,7 +6,7 @@ This cartridge integrates Superpilot pages (superpilot.com) with Salesforce B2C 
 
 1. Upload the cartridge to the active code version of your B2C instance.
 2. [Import the Metadata](#importing-metadata).
-3. In Business Manage, add `plugin_superpilot` to your site's cartridge path.
+3. In Business Manager, add `plugin_superpilot` to your site's cartridge path.
 
 Verify you can access Superpilot pages at `https://$INSTANCE/s/$SITE/landing/$PATH` and the Superpilot sitemap at `https://$INSTANCE/s/$SITE/sitemap-pages.xml`.
 
@@ -42,19 +42,19 @@ After import, update the `Superpilot` service credential URL in Business Manager
 
 1. Go to **Administration > Operations > Services**
 2. Click on **Credentials** tab, then **Superpilot**
-3. Update the URL to your Superpilot environment origin (e.g., `https://$ORG-$ENV.pages.superpilot.ai`)
+3. Update the URL to your Superpilot environment origin (e.g., `https://$ORG-$ENV.pages.superpilot.net`)
 
 ## Site Preferences
 
 Customize behavior in Business Manager under **Merchant Tools > Site Preferences > Custom Preferences > Superpilot**.
 
-| Preference                | Type    | Default    | Description                                                               |
-| ------------------------- | ------- | ---------- | ------------------------------------------------------------------------- |
-| `superpilotEnabled`       | Boolean | `true`     | Disable Superpilot                                                        |
-| `superpilotPathPrefix`    | String  | `/landing` | URL path prefix for Superpilot pages. Supports regex with `regex:` prefix |
-| `superpilotSiteMapSuffix` | String  | `pages`    | Sitemap URL suffix (e.g., `pages` → `/sitemap-pages.xml`)                 |
-| `superpilotCacheTime`     | Integer | (none)     | Cache duration in seconds for successful responses                        |
-| `superpilotDebug`         | Boolean | (none)     | Enable the `Superpilot-Show` diagnostic endpoint                          |
+| Preference                | Type    | Default    | Description                                                                     |
+| ------------------------- | ------- | ---------- | ------------------------------------------------------------------------------- |
+| `superpilotEnabled`       | Boolean | `true`     | Disable Superpilot                                                              |
+| `superpilotPathPrefix`    | String  | `/landing` | URL path prefix for Superpilot pages. Supports regex with `regex:` prefix       |
+| `superpilotSiteMapSuffix` | String  | `pages`    | Sitemap URL suffix (e.g., `pages` → `/sitemap-pages.xml`)                       |
+| `superpilotCacheTime`     | Integer | (none)     | Cache duration in seconds for successful responses. Unset, pages are not cached |
+| `superpilotDebug`         | Boolean | (none)     | Enable the `Superpilot-Show` diagnostic endpoint                                |
 
 ### Path Prefix
 
@@ -68,6 +68,20 @@ For complex matching, use a regex pattern with the `regex:` prefix:
 regex:^\/(landing|promo)\/
 ```
 
+## Response Headers
+
+Superpilot's response headers are passed on to the shopper, with two limits:
+
+- **A blocklist** in `scripts/superpilot/proxy.js` drops headers that belong to your domain or to
+  Superpilot's CDN: hop-by-hop headers, cookies, HSTS, CORS, referrer policy, error reporting, and
+  caching headers (caching is `superpilotCacheTime`).
+- **B2C's own list.** A script may only set the public headers named by `dw.system.Response`'s
+  constants (such as `Content-Type`, `X-Robots-Tag`, `Vary`, `Link`), plus custom `X-SF-CC-`
+  headers. The cartridge writes each header with B2C's spelling and skips the rest.
+
+So a header Superpilot adds later, such as `X-Robots-Tag: noindex` on a page's Markdown copy
+(`/landing/<page>.md`), reaches the shopper with no cartridge change, as long as B2C allows it.
+
 ## Troubleshooting
 
 ### Pages Not Loading
@@ -80,10 +94,11 @@ regex:^\/(landing|promo)\/
 ### Debugging Requests
 
 Successful responses include an `X-SF-CC-Superpilot-Request-Id` header containing the request ID.
-
 Use this when contacting support.
 
-To check your current configuration, access the `Superpilot-Show` controller (must be enabled on non-sandbox instances).
+To check your current configuration, open the `Superpilot-Show` controller at
+`https://$INSTANCE/on/demandware.store/Sites-$SITE-Site/default/Superpilot-Show`. It answers on
+sandboxes, and elsewhere only with `superpilotDebug` set.
 
 ### Logging
 
@@ -103,11 +118,13 @@ b2c logs tail --filter custom-superpilot
 
 ### Common Errors
 
-| Error                 | Cause                            | Solution                             |
-| --------------------- | -------------------------------- | ------------------------------------ |
-| 404 on landing pages  | Path doesn't match prefix        | Check `superpilotPathPrefix` setting |
-| Service error in logs | Superpilot service misconfigured | Verify service URL and credentials   |
-| Regex warning in logs | Regex pattern missing prefix     | Add `regex:` prefix to pattern       |
+| Error                             | Cause                                  | Solution                                      |
+| --------------------------------- | -------------------------------------- | --------------------------------------------- |
+| 404 on landing pages              | Path doesn't match prefix              | Check `superpilotPathPrefix` setting          |
+| Service error in logs             | Superpilot service misconfigured       | Verify service URL and credentials            |
+| Regex warning in logs             | Regex pattern missing prefix           | Add `regex:` prefix to pattern                |
+| `Header refused by B2C` warning   | B2C rejected a header Superpilot sent  | Harmless: the page is still served without it |
+| `.md` pages served as `text/html` | Cartridge older than header forwarding | Upgrade the cartridge                         |
 
 ## Running Tests
 
@@ -120,11 +137,24 @@ npm install
 # Run tests against default instance
 npm test
 
-# Run against a specific instance
-B2C_HOSTNAME=your-instance.dx.commercecloud.salesforce.com npm test
+# Run against a specific storefront host
+B2C_HOSTNAME=your-sandbox.my.commercecloud.salesforce.com npm test
 
 # Run with a specific test page path
 TEST_PAGE_PATH=/landing/your-page npm test
+```
+
+On-demand sandboxes now serve their storefront on `*.my.commercecloud.salesforce.com`, and the
+same host takes code deploys and WebDAV; the old `*.dx.commercecloud.salesforce.com` host redirects
+storefront pages. Point `B2C_HOSTNAME` (and `dw.json`) at the `my` host.
+
+The sitemap index case needs the instance's own sitemap generated. `test/data` defines a
+`CreateSitemap` job for `RefArch`; import it once, and run it again after the host or hostname
+aliases change:
+
+```sh
+b2c job import test/data
+b2c job run SuperpilotTestCreateSitemap -w
 ```
 
 ### Tagged Tests

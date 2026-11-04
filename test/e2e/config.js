@@ -1,5 +1,5 @@
 export const config = {
-  hostname: process.env.B2C_HOSTNAME || 'blwf-001.dx.commercecloud.salesforce.com',
+  hostname: process.env.B2C_HOSTNAME || 'blwf-001.my.commercecloud.salesforce.com',
   siteId: process.env.B2C_SITE_ID || 'RefArch',
   pagePath: process.env.TEST_PAGE_PATH || '/landing/hello-superpilot',
 };
@@ -7,4 +7,9 @@ export const config = {
 export function buildUrl(path) {
   const base = `https://${config.hostname}/s/${config.siteId}/`;
   return new URL(path.replace(/^\//, ''), base).href;
+}
+
+/** A controller's own URL, which storefront paths under /s/<site>/ do not route to. */
+export function buildControllerUrl(controller) {
+  return `https://${config.hostname}/on/demandware.store/Sites-${config.siteId}-Site/default/${controller}`;
 }

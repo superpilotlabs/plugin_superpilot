@@ -3,7 +3,7 @@
 const Logger = require('dw/system/Logger');
 const URLRedirectMgr = require('dw/web/URLRedirectMgr');
 const server = require('server');
-const { fetch } = require('*/cartridge/scripts/superpilot/proxy');
+const { fetch, applyHeaders } = require('*/cartridge/scripts/superpilot/proxy');
 const { ENABLED, CACHE_TIME, matchesPathPrefix } = require('*/cartridge/scripts/superpilot/config');
 
 const logger = Logger.getLogger('superpilot', 'superpilot.controllers.RedirectURL');
@@ -25,6 +25,7 @@ function SuperpilotPage(_req, _res, next) {
   try {
     const fetchResponse = fetch(path);
     if (fetchResponse.ok) {
+      applyHeaders(response, fetchResponse.headers);
       if (CACHE_TIME) {
         response.setExpires(new Date(Date.now() + CACHE_TIME * 1000));
       }
