@@ -26,8 +26,10 @@ var DEFAULT_TIMEOUT = 5000;
  * Response headers from Superpilot that never reach the shopper; every other header does, so a
  * header Superpilot starts sending needs no cartridge change. Hop-by-hop headers belong to one
  * connection, the body is re-written so its encoding and length no longer hold, the storefront's
- * domain owns its cookies and HSTS, B2C's page cache owns caching (`superpilotCacheTime`), and the
- * rest name Superpilot's CDN rather than the page. `Content-Type` is applied with
+ * domain owns its cookies and site data, HSTS, referrer policy, CORS and error reporting, B2C's page
+ * cache owns caching (`superpilotCacheTime`), and the rest name Superpilot's CDN rather than the
+ * page. The first part of the list is `BLOCKED_RESPONSE_HEADERS` in `@superpilot/pages`; keep the two
+ * equal (superpilotlabs/superpilot `docs/reverse-proxy.md`). `Content-Type` is applied with
  * `setContentType`, which B2C requires.
  */
 const BLOCKED_RESPONSE_HEADERS = [
@@ -43,18 +45,32 @@ const BLOCKED_RESPONSE_HEADERS = [
   'content-encoding',
   'content-length',
   'set-cookie',
+  'clear-site-data',
   'strict-transport-security',
   'alt-svc',
-  'cache-control',
-  'expires',
-  'pragma',
-  'age',
-  'date',
+  'referrer-policy',
+  'access-control-allow-origin',
+  'access-control-allow-methods',
+  'access-control-allow-headers',
+  'access-control-allow-credentials',
+  'access-control-expose-headers',
+  'access-control-max-age',
+  'nel',
+  'report-to',
+  'reporting-endpoints',
   'server',
+  'server-timing',
   'via',
+  'age',
   'x-cache',
   'x-amz-cf-id',
   'x-amz-cf-pop',
+  'x-amzn-trace-id',
+  'x-powered-by',
+  'cache-control',
+  'expires',
+  'pragma',
+  'date',
 ];
 
 /**
