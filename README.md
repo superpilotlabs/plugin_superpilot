@@ -157,6 +157,10 @@ b2c job import test/data
 b2c job run SuperpilotTestCreateSitemap -w
 ```
 
+The test sandbox runs compatibility mode 19.10, the oldest B2C supports, on purpose: the
+cartridge has to work on every customer's instance, so it is tested where the platform is most
+restrictive. Keep it there, and keep the cartridge to what 19.10 allows.
+
 ### Tagged Tests
 
 Some tests require specific configuration and are skipped by default. Enable them with `TEST_TAGS`:

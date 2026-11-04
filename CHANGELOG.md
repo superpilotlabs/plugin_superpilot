@@ -1,14 +1,5 @@
 # Changelog
 
-## 0.0.4
-
-### Development
-
-- `@salesforce/b2c-cli` 2.12, `actions/checkout` and `actions/setup-node` v7, `pnpm/action-setup` v6,
-  prettier 3.9 and eslint 9.39.
-- `steptypes.json` names the sitemap import job's module with the file's own casing
-  (`importSitemap.js`).
-
 ## 0.0.3
 
 ### Features
@@ -32,6 +23,10 @@
 ### Development
 
 - Node 26 and pnpm 10.32.1, as in the Superpilot repo.
+- `@salesforce/b2c-cli` 2.12, `actions/checkout` and `actions/setup-node` v7, `pnpm/action-setup` v6,
+  prettier 3.9 and eslint 9.39. `pnpm-lock.yaml` is left to pnpm (`.prettierignore`).
+- `steptypes.json` names the sitemap import job's module with the file's own casing
+  (`importSitemap.js`).
 - e2e runs against the sandbox's `*.my.commercecloud.salesforce.com` host, and checks the Markdown
   copy's headers and the `Superpilot-Show` response.
 - `test/data/jobs.xml` defines a `CreateSitemap` job for generating a test sandbox's sitemap.
